@@ -33,7 +33,7 @@
 
     <form id="form1" runat="server">
 
-    <div id="wrapper">
+    <div id="wrapper" class="">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">

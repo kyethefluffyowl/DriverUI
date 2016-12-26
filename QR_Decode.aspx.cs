@@ -12,7 +12,6 @@ public partial class QR_Decode_Test : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         ClientScript.RegisterStartupScript(GetType(), "HidingImageUpload", "document.getElementById('file-upload-picture').style.display = 'block';", true);
-        ClientScript.RegisterStartupScript(GetType(), "HidingInputUpload", "document.getElementById('file-upload').style.display = 'block';", true);
         ClientScript.RegisterStartupScript(GetType(), "HidingImagePreviewPlaceholder", "document.getElementById('showUploadImage').style.display = 'block';", true);
         sendQRinfo.Visible = true;
         textboxResult.Visible = true;
@@ -59,7 +58,6 @@ public partial class QR_Decode_Test : System.Web.UI.Page
             if ((string)Session["statusCol"] == "Completed")
             {
                 ClientScript.RegisterStartupScript(GetType(), "HidingImageUpload", "document.getElementById('file-upload-picture').style.display = 'none';", true);
-                ClientScript.RegisterStartupScript(GetType(), "HidingInputUpload", "document.getElementById('file-upload').style.display = 'none';", true);
                 ClientScript.RegisterStartupScript(GetType(), "HidingImagePreviewPlaceholder", "document.getElementById('showUploadImage').style.display = 'none';", true);
                 sendQRinfo.Visible = false;
                 textboxResult.Visible = false;

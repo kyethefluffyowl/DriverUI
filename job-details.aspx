@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="job-details.aspx.cs" Inherits="_Default" %>
 
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -27,10 +28,37 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+    <!-- QR CODE STUFF -->
+    <script type="text/javascript" src="QR_Assets/llqrcode.js"></script>
+    <script type="text/javascript" src="QR_Assets/webqr.js"></script>
+    <script type="text/javascript" src="QR_Assets/jquery-2.2.4.min.js"></script>
+
+     <script type="text/javascript">
+         function setLabelText(e) {
+             e.preventDefault();  // To prevent postback
+             var txtValue = $('#<%=result.ClientID%>').html();
+         } //MAKE SURE ITS .HTML NOT .VAL
+
+        //GETTING THE VALUE FROM RESULTS --> POPUP ONE
+        function getLabelText(e) {
+            e.preventDefault(); // To prevent postback
+            alert($('#<%=result.ClientID%>').html());
+            document.write("txtvalue");
+        }
+    </script>
+
+    <style>
+        .alignInputPicture {width: auto; height:auto;}
+        .custom-file-upload {height:128px; width:auto; padding-bottom:1em;}
+    </style>
+
+    <!--[END QR CODE HEADER STUFF]-->
+
 </head>
 
-<body onload="resumeTab();">
-
+<body onload="resumeTab(); load(); setimg();" style="overflow:hidden;">
+    
     <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
@@ -75,7 +103,8 @@
 
                     <div id="JobDesc" class="tabcontent">
                       <h3>Job Description</h3>
-                      <asp:Label runat="server" ID="JobDescPara" AssociatedControlID="JobDescPara"></asp:Label>                       
+                      <asp:Label runat="server" ID="JobDescPara" AssociatedControlID="JobDescPara"></asp:Label>
+
                     </div>
                     <div id="Location" class="tabcontent">
                       <h3>Location</h3>
@@ -88,39 +117,71 @@
                     </div>
                     <div id="QR" class="tabcontent">
                       <h3>Scan your QR Code</h3>
+                        <!-- iFRAME IN CASE IT DOEST WORK -->
+                        <!--
                         <iframe id="iframeQR" src="QR_Decode.aspx" style="width:100%; height:15em; overflow:hidden;"></iframe>
+                        -->
                         <asp:Label runat="server" ID="QRStatus" BackColor="White"></asp:Label>
+
+<!-- QR DECODE LIVES HERE NOW-->
+                        <form id="Form1">
+                            <div id="main" >
+                                <div id="mainbody" >
+                                        <div style="display:inline-block;">
+                                            <!--Selecting a file-->
+                                            <img id="file-upload-picture" class="custom-file-upload" src="http://image.flaticon.com/icons/svg/179/179436.svg" onclick="launchInput(); return false;"/>
+                                            <input id="file-upload" type="file" onchange="handleFiles(this.files); readURL(this); parseToText();" style="display:none;"/> <!--Clicking on the image activates to choose a photo-->     
+                                            <!--Parsing the data from the canvas (below) to the text box-->
+                                            <div style="display:block;">
+                                                <textbox runat="server" ID="textboxResult" Enabled="false" AutoPostBack="true"></textbox></div>
+                                            <div style="display:block">
+                                                <button runat="server" id="sendQRinfo" OnClick="sendQRinfo_Click" Text="COMPLETE JOB"/>
+                                                <label runat="server" id="labelCompleteJob"></label>
+                                            </div>
+                                        </div>
+                                        <!--The image taken/ uploaded displays here-->
+                                        <img id="showUploadImage" src="#" alt="Uploaded Image"/>
+                                        <!--The Canvas Image Data Lives Here | These 3 lines are vvvvvv impt thx-->
+                                        <div id="outdiv" style="display:none; height:auto;"></div> <!--Actual Canvas will be Drawn here in JS-->
+                                        <asp:HiddenField runat="server" ID="result"/> <!--Where the decoded result actually stays to parse to Canvas.-->
+                                        <canvas id="qr-canvas"  style="display:none;" width="10" height="10" ></canvas> <!--Canvas to draw image in HTML-->
+                                </div>
+                            </div>
+    
+                            </form>
+<!-- [QR DECODER ENDS HERE] -->
+
                     </div>
                     <div id="Maintenance" class="tabcontent">
                       <h3>Maintenance</h3>
-                        <form runat="server" style="">
-                           <div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
+                        <form id="Form2" runat="server" style="display:block;">
+                            <div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
                                 <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">No Maintenance</asp:Label></div></div>
-                           <div>
-                               <div>
-                                   <asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="selfMaintenance" onclick="checkbox1()"/>
-                                   <div style="display:inline-block">
-                                       <asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label>
-                                   </div>
-                               </div>
-                               <div id="selfDetailsDIV" style="display:inline-block;">
-                                   <div style="display:block;">
-                                       <div style="display:inline-block"><asp:DropDownList ID="selfType" runat="server">
-                                           <asp:ListItem Value="I001">I001 Tyre</asp:ListItem>
-                                           <asp:ListItem Value="I002">I002 Battery</asp:ListItem>
-                                           <asp:ListItem Value="I003">I003 I'm supposed to get the data from the database</asp:ListItem>
-                                       </asp:DropDownList></div>
-                                       <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
-                                           <asp:ListItem Value="1" >1</asp:ListItem>
-                                           <asp:ListItem Value="2" >2</asp:ListItem>
-                                           <asp:ListItem Value="3" >3</asp:ListItem>
-                                           <asp:ListItem Value="4" >4</asp:ListItem>
-                                           <asp:ListItem Value="5" >4</asp:ListItem>
-                                       </asp:DropDownList></div>
-                                   </div>
-                                   <div style="display:block; width:100%;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em"></asp:TextBox></div>
-                               </div>
-                           </div>
+                            <div>
+                                <div>
+                                    <asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="selfMaintenance" onclick="checkbox1()"/>
+                                    <div style="display:inline-block">
+                                        <asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label>
+                                    </div>
+                                </div>
+                                <div id="selfDetailsDIV" style="display:inline-block;">
+                                     <div style="display:block;">
+                                        <div style="display:inline-block"><asp:DropDownList ID="selfType" runat="server">
+                                            <asp:ListItem Value="I001">I001 Tyre</asp:ListItem>
+                                            <asp:ListItem Value="I002">I002 Battery</asp:ListItem>
+                                            <asp:ListItem Value="I003">I003 I'm supposed to get the data from the database</asp:ListItem>
+                                        </asp:DropDownList></div>
+                                        <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
+                                            <asp:ListItem Value="1" >1</asp:ListItem>
+                                            <asp:ListItem Value="2" >2</asp:ListItem>
+                                            <asp:ListItem Value="3" >3</asp:ListItem>
+                                            <asp:ListItem Value="4" >4</asp:ListItem>
+                                            <asp:ListItem Value="5" >5</asp:ListItem>
+                                        </asp:DropDownList></div>
+                                    </div>
+                                    <div style="display:block; width:100%;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em"></asp:TextBox></div>
+                                </div>
+                            </div>
                            <div>
                                <div>
                                     <asp:RadioButton runat="server" id="outsourceMaintenance" onclick="checkbox2()" style="width:auto; display:inline-block;" />
@@ -177,10 +238,17 @@
                     selfDetailsDIV.style.display = "none";
             }
 
+            function launchInput() {
+                document.getElementById("file-upload").click();
+                //alert("hello!");
+            }
+
+
+
             var lastOpenedTab = $.session.set("NameofSession", "");
 
             function openTab(evt, tabName) {
-                var i, tabcontent, tablinks;
+                var i, tabcontent, tablinks, g;
                 tabcontent = document.getElementsByClassName("tabcontent");
                 for (i = 0; i < tabcontent.length; i++) {
                     tabcontent[i].style.display = "none";
@@ -189,20 +257,32 @@
                 for (i = 0; i < tablinks.length; i++) {
                     tablinks[i].className = tablinks[i].className.replace(" active", "");
                 }
+
                 document.getElementById(tabName).style.display = "block";
                 evt.currentTarget.className += " active";
 
                 lastOpenedTab = tabName;
                 $.session.set("NameofSession", lastOpenedTab + "Tab");
-                
+
+                //This will run when a specific tab is clicked
+//                if (document.getElementById(lastOpenedTab + 'Tab').id == "QRTab") {
+//                    document.getElementById("form2Button").click();
+//                }
+//                if (document.getElementById(lastOpenedTab + 'Tab').id == "MaintenanceTab") {
+//                    document.getElementById("form1Button").click();
+//                }
+
+            
             }
 
             function resumeTab() {
+
                 if (lastOpenedTab == "")
                 { document.getElementById("JobDescTab").click(); }
                 if (lastOpenedTab != "") {
                 document.getElementById($.session.get("NameofSession")).click();
                     //alert($.session.get("NameofSession"))
+
                 }
             }
 
