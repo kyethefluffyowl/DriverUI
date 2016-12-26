@@ -16,6 +16,7 @@ public partial class QR_Decode_Test : System.Web.UI.Page
         ClientScript.RegisterStartupScript(GetType(), "HidingImagePreviewPlaceholder", "document.getElementById('showUploadImage').style.display = 'block';", true);
         sendQRinfo.Visible = true;
         textboxResult.Visible = true;
+        textboxResult.Attributes.Add("readonly", "readonly");
         labelCompleteJob.Text = "";
     }
 

@@ -94,7 +94,7 @@
                     <div id="Maintenance" class="tabcontent">
                       <h3>Maintenance</h3>
                         <form runat="server" style="">
-                           <div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
+                           <div><asp:RadioButton runat="server" Checked="true" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
                                 <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">No Maintenance</asp:Label></div></div>
                            <div>
                                <div>
@@ -106,16 +106,18 @@
                                <div id="selfDetailsDIV" style="display:inline-block;">
                                    <div style="display:block;">
                                        <div style="display:inline-block"><asp:DropDownList ID="selfType" runat="server">
-                                           <asp:ListItem Value="I001">I001 Tyre</asp:ListItem>
-                                           <asp:ListItem Value="I002">I002 Battery</asp:ListItem>
-                                           <asp:ListItem Value="I003">I003 I'm supposed to get the data from the database</asp:ListItem>
+                                           <asp:ListItem Selected="True" Value="selectTypeError">Select the item needed for maintenance.</asp:ListItem>
+                                           <asp:ListItem Value="2">Industrial Tyre</asp:ListItem>
+                                           <asp:ListItem Value="1">Industrial Battery</asp:ListItem>
+                                           <asp:ListItem Value="3">Update the code with list of inventory pls</asp:ListItem>
                                        </asp:DropDownList></div>
                                        <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
-                                           <asp:ListItem Value="1" >1</asp:ListItem>
+                                           <asp:ListItem Selected="True" Value="1" >1</asp:ListItem>
                                            <asp:ListItem Value="2" >2</asp:ListItem>
                                            <asp:ListItem Value="3" >3</asp:ListItem>
                                            <asp:ListItem Value="4" >4</asp:ListItem>
-                                           <asp:ListItem Value="5" >4</asp:ListItem>
+                                           <asp:ListItem Value="5" >5</asp:ListItem>
+                                           <asp:ListItem Value="6" >6</asp:ListItem>
                                        </asp:DropDownList></div>
                                    </div>
                                    <div style="display:block; width:100%;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em"></asp:TextBox></div>
@@ -128,7 +130,7 @@
                                         <asp:Label ForeColor="white" runat="server">Outsource Maintenance</asp:Label>
                                     </div>
                                </div>
-                               <asp:TextBox ID="outsourceText" runat="server" Width="100%" Height="3em"></asp:TextBox>
+                               <asp:TextBox runat="server" ID="outsourceText" Width="100%" Height="3em"></asp:TextBox>
                            </div>
                             <div style="float:right; font-size:0.5em; "><asp:Button runat="server" Text="Submit" OnClick="SubmitMaint_Click"/></div><!--Need to find a way to just send data that is selected, not the entire thing-->
                         </form>
@@ -204,6 +206,7 @@
                 document.getElementById($.session.get("NameofSession")).click();
                     //alert($.session.get("NameofSession"))
                 }
+                document.getElementById("noMaintenance").click();
             }
 
             // Get the element with id="JobDescTab" and click on it

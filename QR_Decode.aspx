@@ -52,11 +52,11 @@
                 <div style="display:inline-block;">
                     <!--Selecting a file-->
                     <label id="file-upload-picture" for="file-upload" class="custom-file-upload" style="height: 112px; display: block;"></label> <!--Showing an Image to click on-->
-                    <input id="file-upload" type="file" onchange="handleFiles(this.files); readURL(this); parseToText();" style="display:none;"/> <!--Clicking on the image activates to choose a photo-->     
+                    <input id="file-upload" style="display:none; visibility: hidden;" type="file" onchange="handleFiles(this.files); readURL(this); parseToText();" /> <!--Clicking on the image activates to choose a photo-->     
                     <!--Parsing the data from the canvas (below) to the text box-->
                     <div style="display:block;">
-                        <asp:TextBox runat="server" ID="textboxResult" Enabled="true" AutoPostBack="true"></asp:TextBox>
-                        
+                        <asp:TextBox runat="server" ID="textboxResult" Enabled="true" AutoPostBack="true" Width="5em"></asp:TextBox>
+                        <asp:Label runat="server" ID="labelResult" Text="This textbox is here to display the result. It will be removed in the final version" ></asp:Label>
                         <!--Old button-->
                         <!--<button id="resultTXTButton" onclick="document.getElementById('textboxResult').innerText = document.getElementById('result').innerHTML.toString()">Complete Job</button>-->
                     </div>
