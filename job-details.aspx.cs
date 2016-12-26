@@ -10,7 +10,20 @@ public partial class _Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        //Description Tab
+        JobDescPara.Text = (string)Session["jobDescCol"];
 
+        //Respective Tabs
+        LocationPara.Text = (string)Session["locationCol"];
+        ETCPara.Text = (string)Session["driverDateEndCol"];
+        StatusPara.Text = (string)Session["statusCol"];
+
+        //Marking Status as complete
+        if ((string)Session["statusCol"] == "Completed")
+        {
+            ClientScript.RegisterStartupScript(GetType(), "Hidingiframe", "document.getElementById('iframeQR').style.display = 'none';", true);
+            QRStatus.Text = "Job Completed!";
+        }
     }
 
     protected void SubmitMaint_Click(object sender, EventArgs e)
@@ -43,9 +56,6 @@ public partial class _Default : System.Web.UI.Page
             {
                 ClientScript.RegisterStartupScript(GetType(), "MissingFieldAlert", "alert('MissingField'); ", true);
                 ClientScript.RegisterStartupScript(GetType(), "MaintenanceTab", "document.getElementById('MaintenanceTab').click();", true);
-
-                
-
             }
 
 

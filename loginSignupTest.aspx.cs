@@ -11,4 +11,9 @@ public partial class _Default : System.Web.UI.Page
     {
 
     }
+
+    protected void Unnamed1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        
+    }
 }

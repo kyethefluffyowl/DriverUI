@@ -125,7 +125,7 @@ label {
   position: absolute;
   -webkit-transform: translateY(6px);
           transform: translateY(6px);
-  left: 13px;
+  /*left: 13px;*/
   color: rgba(255, 255, 255, 0.5);
   -webkit-transition: all 0.25s ease;
   transition: all 0.25s ease;

@@ -96,6 +96,8 @@ ul.tab li a:focus, .active {
   <p>Tokyo is the capital of Japan.</p>
 </div>
 
+        <asp:DropDownList runat="server" DataValueField="Value" DataTextField="Text">    </asp:DropDownList>
+
 <script>
 
     <!-- tablinks = tabs; |  tab = tab-group; | 

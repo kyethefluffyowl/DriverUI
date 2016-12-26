@@ -29,7 +29,7 @@
 
 </head>
 
-<body onload="resumeTab()">
+<body onload="resumeTab();">
 
     <div id="wrapper" class="toggled">
 
@@ -37,9 +37,7 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="#">
-                        HupLeck Driver
-                    </a>
+                    <a href="#">HupLeck Driver</a>
                 </li>
                 <li>
                     <a href="jobs.aspx">Jobs</a>
@@ -66,30 +64,32 @@
                 <div class="form">
                     <ul class="tab">
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'JobDesc')" id="JobDescTab">Job Description</a></li>
+                      <!--<asp:Label runat="server" id="testLabel" AssociatedControlID="testLabel" >No Session ):</asp:Label> -->
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Location')" id="LocationTab">Location</a></li>
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'ETC')" id="ETCTab">ETC</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR')" id="QRTab">QR</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR');" id="QRTab">QR</a></li>
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Maintenance')" id="MaintenanceTab">Maintenance</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Status')" id="StatusTab">Status</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Duration')" id="DurationTab">Duration</a></li>       
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Status');" id="StatusTab">Status</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'EqReturn')" id="EqReturnTab">Equipment Return</a></li>      
                     </ul>
 
                     <div id="JobDesc" class="tabcontent">
                       <h3>Job Description</h3>
-                      <p>Who to meet.</p>
+                      <asp:Label runat="server" ID="JobDescPara" AssociatedControlID="JobDescPara"></asp:Label>                       
                     </div>
                     <div id="Location" class="tabcontent">
                       <h3>Location</h3>
-                      <p>Location goes here</p>
+                      <asp:Label runat="server" ID="LocationPara" AssociatedControlID="LocationPara"></asp:Label>
                       <p>Google Map API goes here.</p>
                     </div>
                     <div id="ETC" class="tabcontent">
                       <h3>ETC</h3>
-                      <p>Estimated Time of Completion</p>
+                      <asp:Label runat="server" ID="ETCPara" AssociatedControlID="ETCPara">Estimated Time of Completion</asp:Label>
                     </div>
                     <div id="QR" class="tabcontent">
                       <h3>Scan your QR Code</h3>
-                      <p>QR Code thing goes here</p>
+                        <iframe id="iframeQR" src="QR_Decode.aspx" style="width:100%; height:15em; overflow:hidden;"></iframe>
+                        <asp:Label runat="server" ID="QRStatus" BackColor="White"></asp:Label>
                     </div>
                     <div id="Maintenance" class="tabcontent">
                       <h3>Maintenance</h3>
@@ -111,7 +111,7 @@
                                            <asp:ListItem Value="I003">I003 I'm supposed to get the data from the database</asp:ListItem>
                                        </asp:DropDownList></div>
                                        <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
-                                           <asp:ListItem Value="1">1</asp:ListItem>
+                                           <asp:ListItem Value="1" >1</asp:ListItem>
                                            <asp:ListItem Value="2" >2</asp:ListItem>
                                            <asp:ListItem Value="3" >3</asp:ListItem>
                                            <asp:ListItem Value="4" >4</asp:ListItem>
@@ -134,12 +134,12 @@
                         </form>
                     </div>
                     <div id="Status" class="tabcontent">
-                      <h3>Status</h3>
-                      <p>Status of job: Complete/ Incomplete</p>
+                        <h3>Status</h3>
+                        <p><asp:Label runat="server" ID="StatusPara"  AssociatedControlID="StatusPara"></asp:Label></p>
                     </div>
-                    <div id="Duration" class="tabcontent">
-                      <h3>Duration</h3>
-                      <p>Total Elapsed Time:</p>
+                    <div id="EqReturn" class="tabcontent">
+                      <h3>Equipment Return</h3>
+                      <p>Click the button to release the vehicle back into inventory.</p>
                     </div>
                 </div>
         </div>
@@ -176,9 +176,6 @@
                     outsourceText.style.display = "block";
                     selfDetailsDIV.style.display = "none";
             }
-            function MissingField() {
-                alert("Missing Field");
-            }
 
             var lastOpenedTab = $.session.set("NameofSession", "");
 
@@ -196,7 +193,6 @@
                 evt.currentTarget.className += " active";
 
                 lastOpenedTab = tabName;
-
                 $.session.set("NameofSession", lastOpenedTab + "Tab");
                 
             }
@@ -206,7 +202,7 @@
                 { document.getElementById("JobDescTab").click(); }
                 if (lastOpenedTab != "") {
                 document.getElementById($.session.get("NameofSession")).click();
-                    alert($.session.get("NameofSession"))
+                    //alert($.session.get("NameofSession"))
                 }
             }
 
