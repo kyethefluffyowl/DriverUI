@@ -29,9 +29,9 @@
 
 </head>
 
-<body onload="init">
+<body onload="resumeTab()">
 
-    <div id="wrapper">
+    <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
@@ -65,13 +65,13 @@
             <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" /></a> <!--class="btn btn-default"-->
                 <div class="form">
                     <ul class="tab">
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'JobDesc')" id="defaultOpen">Job Description</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Location')">Location</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'ETC')">ETC</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR')">QR</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Maintenance')">Maintenance</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Status')">Status</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Duration')">Duration</a></li>       
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'JobDesc')" id="JobDescTab">Job Description</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Location')" id="LocationTab">Location</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'ETC')" id="ETCTab">ETC</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR')" id="QRTab">QR</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Maintenance')" id="MaintenanceTab">Maintenance</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Status')" id="StatusTab">Status</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Duration')" id="DurationTab">Duration</a></li>       
                     </ul>
 
                     <div id="JobDesc" class="tabcontent">
@@ -96,28 +96,41 @@
                         <form runat="server" style="">
                            <div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
                                 <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">No Maintenance</asp:Label></div></div>
-                           <div><div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="selfMaintenance" onclick="checkbox1()"/>
-                                <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label></div></div>
-                               <div style="display:block;">
-                                   <div id="selfType" style="display:inline-block"><asp:DropDownList runat="server">
-                                       <asp:ListItem>I001 Tyre</asp:ListItem>
-                                       <asp:ListItem>I002 Battery</asp:ListItem>
-                                       <asp:ListItem>I003 I'm supposed to get the data from the database</asp:ListItem>
-                                   </asp:DropDownList></div>
-                                   <div id="selfQty" style="display:inline-block"><asp:DropDownList runat="server">
-                                       <asp:ListItem>1</asp:ListItem>
-                                       <asp:ListItem>2</asp:ListItem>
-                                       <asp:ListItem>3</asp:ListItem>
-                                       <asp:ListItem>4</asp:ListItem>
-                                   </asp:DropDownList></div>
+                           <div>
+                               <div>
+                                   <asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="selfMaintenance" onclick="checkbox1()"/>
+                                   <div style="display:inline-block">
+                                       <asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label>
+                                   </div>
                                </div>
-                               <div id="selfDesc" style="display:block; width:100%;"><asp:TextBox runat="server" Width="100%" Height="3em"></asp:TextBox></div>
-                            </div>
-                           <div><div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="outsourceMaintenance" onclick="checkbox2()"/>
-                                <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">Outsource Maintenance</asp:Label></div></div>
+                               <div id="selfDetailsDIV" style="display:inline-block;">
+                                   <div style="display:block;">
+                                       <div style="display:inline-block"><asp:DropDownList ID="selfType" runat="server">
+                                           <asp:ListItem Value="I001">I001 Tyre</asp:ListItem>
+                                           <asp:ListItem Value="I002">I002 Battery</asp:ListItem>
+                                           <asp:ListItem Value="I003">I003 I'm supposed to get the data from the database</asp:ListItem>
+                                       </asp:DropDownList></div>
+                                       <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
+                                           <asp:ListItem Value="1">1</asp:ListItem>
+                                           <asp:ListItem Value="2" >2</asp:ListItem>
+                                           <asp:ListItem Value="3" >3</asp:ListItem>
+                                           <asp:ListItem Value="4" >4</asp:ListItem>
+                                           <asp:ListItem Value="5" >4</asp:ListItem>
+                                       </asp:DropDownList></div>
+                                   </div>
+                                   <div style="display:block; width:100%;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em"></asp:TextBox></div>
+                               </div>
+                           </div>
+                           <div>
+                               <div>
+                                    <asp:RadioButton runat="server" id="outsourceMaintenance" onclick="checkbox2()" style="width:auto; display:inline-block;" />
+                                    <div style="display:inline-block">
+                                        <asp:Label ForeColor="white" runat="server">Outsource Maintenance</asp:Label>
+                                    </div>
+                               </div>
                                <asp:TextBox ID="outsourceText" runat="server" Width="100%" Height="3em"></asp:TextBox>
                            </div>
-                            <asp:Button runat="server" /> <!--Need to find a way to just send data that is selected, not the entire thing-->
+                            <div style="float:right; font-size:0.5em; "><asp:Button runat="server" Text="Submit" OnClick="SubmitMaint_Click"/></div><!--Need to find a way to just send data that is selected, not the entire thing-->
                         </form>
                     </div>
                     <div id="Status" class="tabcontent">
@@ -129,16 +142,19 @@
                       <p>Total Elapsed Time:</p>
                     </div>
                 </div>
-            </div></div></div></div>
+        </div>
+        </div>
+        </div>
+        </div>
         <!-- /#page-content-wrapper -->
 
         <script>
-            var noMaintenance, self, selfType, selfQty, selfDesc, outsource, outsourceText;
+            var noMaintenance, self, selfTypeDIV, selfQtyDIV, selfDescDIV, outsource, outsourceText;
             noMaintenance = document.getElementById("noMaintenance");
             self = document.getElementById("selfMaintenance");
-            selfType = document.getElementById("selfType");
-            selfQty = document.getElementById("selfQty");
-            selfDesc = document.getElementById("selfDesc");
+            selfTypeDIV = document.getElementById("selfTypeDiv");
+            selfQtyDIV = document.getElementById("selfQtyDIV");
+            selfDescDIV = document.getElementById("selfDescDIV");
             outsource = document.getElementById("outsourceMaintenance");
             outsourceText = document.getElementById("outsourceText");
 
@@ -146,27 +162,25 @@
                     self.checked = false;
                     outsource.checked = false;
                     outsourceText.style.display = "none";
-                    selfType.style.display = "none";
-                    selfQty.style.display = "none";
-                    selfDesc.style.display = "none";
+                    selfDetailsDIV.style.display = "none";
             }
             function checkbox1() {
                     noMaintenance.checked = false;
                     outsource.checked = false;
                     outsourceText.style.display = "none";
-                    selfType.style.display = "inline-block";
-                    selfQty.style.display = "inline-block";
-                    selfDesc.style.display = "block";
+                    selfDetailsDIV.style.display = "initial";
             }
             function checkbox2() {
                     noMaintenance.checked = false;
                     self.checked = false;
                     outsourceText.style.display = "block";
-                    selfType.style.display = "none";
-                    selfQty.style.display = "none";
-                    selfDesc.style.display = "none";
-
+                    selfDetailsDIV.style.display = "none";
             }
+            function MissingField() {
+                alert("Missing Field");
+            }
+
+            var lastOpenedTab = $.session.set("NameofSession", "");
 
             function openTab(evt, tabName) {
                 var i, tabcontent, tablinks;
@@ -180,14 +194,27 @@
                 }
                 document.getElementById(tabName).style.display = "block";
                 evt.currentTarget.className += " active";
+
+                lastOpenedTab = tabName;
+
+                $.session.set("NameofSession", lastOpenedTab + "Tab");
+                
             }
 
-            // Get the element with id="defaultOpen" and click on it
-            document.getElementById("defaultOpen").click();
+            function resumeTab() {
+                if (lastOpenedTab == "")
+                { document.getElementById("JobDescTab").click(); }
+                if (lastOpenedTab != "") {
+                document.getElementById($.session.get("NameofSession")).click();
+                    alert($.session.get("NameofSession"))
+                }
+            }
+
+            // Get the element with id="JobDescTab" and click on it
+            //document.getElementById("JobDescTab").click();
             outsourceText.style.display = "none";
-            selfType.style.display = "none";
-            selfQty.style.display = "none";
-            selfDesc.style.display = "none";
+            selfDetailsDIV.style.display = "none";
+
 
         </script>
 
@@ -196,6 +223,7 @@
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
+    <script src="js/jquery.session.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
@@ -206,6 +234,15 @@
           e.preventDefault();
           $("#wrapper").toggleClass("toggled");
       });
+
+      var mq = window.matchMedia("(min-width: 768px)");
+
+          if (mq.matches) {
+              // if it's more than 768px
+          }
+          else {
+              $("#wrapper").toggleClass("toggled");
+          }
       </script>
 </body>
 </html>
