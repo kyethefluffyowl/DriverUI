@@ -18,21 +18,8 @@ public partial class QR_Decode_Test : System.Web.UI.Page
         textboxResult.Visible = true;
         textboxResult.Attributes.Add("readonly", "readonly");
         labelCompleteJob.Text = "";
-    }
 
-    protected void button2_Click(object sender, EventArgs e)
-    {
-        //set the session variable to see if it'll keep it after postback
-        Session["sQRMessageHi"] = labelUpdate.Text; //it's supposed to store "HI
-        Response.Redirect("sesson_Test.aspx");
-
-        //string QRData = labelUpdate.Text.ToString();
-        //Session["sQRData"] = QRData.ToString();
-        //labelUpdateTwice.Text = Session["sQRData"].ToString();
-
-        //Doesnt work; Need to store it in session variable because of postback (which reloads the page)
-        //string QRData = labelUpdate.Text.ToString();
-        //labelUpdateTwice.Text = QRData.ToString();
+        
     }
 
     protected void sendQRinfo_Click(object sender, EventArgs e)
@@ -43,17 +30,36 @@ public partial class QR_Decode_Test : System.Web.UI.Page
         }
         if (textboxResult.Text != "")
         {
-            
+            DateTime currentDateTime = DateTime.Now;
             Session["sQRResult"] = textboxResult.Text.ToString();
             SqlConnection updateJobCompletion = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
             using (updateJobCompletion)
             {
                 updateJobCompletion.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE Jobs SET JStatus = @sStatus WHERE JobID = @sJobID" /*AND where QRResult equals to the QR sent?*/, updateJobCompletion);
+                SqlCommand cmd = new SqlCommand("UPDATE Jobs SET JStatus = @sStatus, JDriverActualCT = @mCurrentDateTime WHERE JobID = @sJobID" /*AND where QRResult equals to the QR sent?*/, updateJobCompletion);
                 cmd.Parameters.AddWithValue("@sStatus", "Completed");
+                cmd.Parameters.AddWithValue("@mCurrentDateTime", currentDateTime);
                 cmd.Parameters.AddWithValue("@sJobID", (string)Session["jobID"]);
-                int result = cmd.ExecuteNonQuery();
+
+                //Calculating Duration driver took
+                SqlCommand cmdDriverDuration = new SqlCommand("SELECT JDriverDateStart FROM Jobs WHERE JobID = @sJobID", updateJobCompletion);
+                cmdDriverDuration.Parameters.AddWithValue("@sJobID", (string)Session["jobID"]);
+                string sDriverStartDate = cmdDriverDuration.ExecuteScalar().ToString();
+                DateTime driverStartDate = Convert.ToDateTime(sDriverStartDate);
+                double dDriverDuration = (currentDateTime - driverStartDate).TotalMinutes;
+                int driverDuration = Convert.ToInt32(dDriverDuration);
+                int roundingUpMins = driverDuration + 40; //Job rounds up when worker works 20mins OT
+                int roundingUpHours = roundingUpMins / 60;
+
+                SqlCommand cmdUpdateDriverDuration = new SqlCommand("UPDATE Jobs SET JDriverDuration = @mDuration WHERE JobID = @sJobID", updateJobCompletion);
+                cmdUpdateDriverDuration.Parameters.AddWithValue("@mDuration", roundingUpHours);
+                cmdUpdateDriverDuration.Parameters.AddWithValue("@sJobID", (string)Session["jobID"]);
+
+                //Executing all things
+                int QRresult0 = cmd.ExecuteNonQuery();
+                int QRresult1 = cmdUpdateDriverDuration.ExecuteNonQuery();
+
                 updateJobCompletion.Close();
                 Session["statusCol"] = "Completed";
             }

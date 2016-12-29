@@ -17,12 +17,6 @@
         function setLabelText(e) {
             e.preventDefault();  // To prevent postback
             var txtValue = $('#<%=result.ClientID%>').html(); //MAKE SURE ITS .HTML NOT .VAL
-            $('#<%=labelUpdate.ClientID%>').html(txtValue);
-
-            //assigning session variable (http://stackoverflow.com/questions/15519454/how-to-access-session-variables-and-set-them-in-javascript)
-            '<%Session["sQRMessageHi"] = "' + txtValue '"; %>';
-
-
         }
 
         //GETTING THE VALUE FROM RESULTS --> POPUP ONE
@@ -38,9 +32,7 @@
     <style>
         .alignInputPicture {width: auto; height:auto;}
         .custom-file-upload {background-image: url(http://image.flaticon.com/icons/svg/179/179436.svg); height:128px; width:auto; background-repeat:no-repeat; padding-bottom:1em;}
-        /*Image 1: http://image.flaticon.com/icons/svg/164/164422.svg */
-        /*Image 2: https://cdn0.iconfinder.com/data/icons/user-interface-49/64/Untitled-2-08-128.png */
-        </style>
+    </style>
 
 </head>
 
@@ -73,25 +65,6 @@
                 <asp:HiddenField runat="server" ID="result"/> <!--Where the decoded result actually stays to parse to Canvas.-->
                 <canvas id="qr-canvas"  style="display:none;" width="10" height="10" ></canvas> <!--Canvas to draw image in HTML-->
             </div>
-            
-
-            
-
-            <!--Popup--
-            <asp:Button runat="server" ID="buttonClick" Text="PopUp Data" OnClientClick="getLabelText(event); return false;"  />
-            -->
-            <!--Setting label--
-            <asp:Label ID="labelUpdate" runat="server" Text="zaqwxsecrbyhnimokpl"></asp:Label>
-            <asp:Button runat="server" ID="button1" Text="Click to set" OnClientClick="setLabelText(event); return false;" />
-            -->
-            <!--Button 2 testing of session variable-
-            <asp:Label ID="labelUpdateTwice" runat="server" Text="TWICE"></asp:Label>
-            <asp:Button runat="server" ID="button2" Text="Click to update TWICE label based on update" OnClick="button2_Click" />
-
-            <asp:Label ID="Label3" runat="server" Text="LABEL JAVASCRIPT WRITE PLS"></asp:Label>
-            -->
-
-
         </div>
     </div>
     

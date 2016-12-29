@@ -67,7 +67,7 @@
                       <!--<asp:Label runat="server" id="testLabel" AssociatedControlID="testLabel" >No Session ):</asp:Label> -->
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Location')" id="LocationTab">Location</a></li>
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'ETC')" id="ETCTab">ETC</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR');" id="QRTab">QR</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR')" id="QRTab">QR</a></li>
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Maintenance')" id="MaintenanceTab">Maintenance</a></li>
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Status');" id="StatusTab">Status</a></li>
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'EqReturn')" id="EqReturnTab">Equipment Return</a></li>      

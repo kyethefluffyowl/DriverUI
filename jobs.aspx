@@ -84,8 +84,8 @@
                                 <asp:BoundField DataField="JPayment" HeaderText="JPayment" SortExpression="JPayment" />
                                 <asp:BoundField DataField="JDriverDuration" HeaderText="JDriverDuration" SortExpression="JDriverDuration" />
                                 <asp:BoundField DataField="JCustDuration" HeaderText="JCustDuration" SortExpression="JCustDuration" />
+                                <asp:BoundField DataField="JDriverActualCT" HeaderText="JDriverActualCT" SortExpression="JDriverActualCT" />
                             </Columns>
-                            
                         </asp:GridView>
 
                         <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE ([JDriverID] = @JDriverID)" >

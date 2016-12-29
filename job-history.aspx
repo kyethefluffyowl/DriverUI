@@ -31,6 +31,8 @@
 
 <body>
 
+    <form id="form1" runat="server">
+
     <div id="wrapper">
 
         <!-- Sidebar -->
@@ -65,9 +67,36 @@
                         <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" /></a> <!--class="btn btn-default"-->
 
                         <h1>Job History</h1>
-                        <p>The table for job history goes <code>here.</code></p>
+                        <p>Total Duration: <asp:Label runat="server" ID="totalDuration"></asp:Label> </p>
+                        <p>Total Pay: <asp:Label runat="server" ID="totalPay"></asp:Label></p>
+
 
                     </div>
+                    <asp:SqlDataSource ID="jobHistorySQL" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE ([JStatus] = @JStatus)">
+                        <SelectParameters>
+                            <asp:Parameter DefaultValue="Completed" Name="JStatus" Type="String" />
+                        </SelectParameters>
+                    </asp:SqlDataSource>
+                    <asp:GridView ID="jobHistoryGridview" runat="server" DataSourceID="jobHistorySQL" OnRowDataBound="jobHistoryGridview_RowDataBound" OnSelectedIndexChanged="jobHistoryGridview_SelectedIndexChanged" AutoGenerateColumns="False" DataKeyNames="JobID">
+                        <Columns>
+                            <asp:ButtonField Text="Select" CommandName="Select" ItemStyle-Width="" />
+                            <asp:BoundField DataField="JobID" HeaderText="JobID" InsertVisible="False" ReadOnly="True" SortExpression="JobID" />
+                            <asp:BoundField DataField="JCustID" HeaderText="JCustID" SortExpression="JCustID" />
+                            <asp:BoundField DataField="JDriverID" HeaderText="JDriverID" SortExpression="JDriverID" />
+                            <asp:BoundField DataField="JDestination" HeaderText="JDestination" SortExpression="JDestination" />
+                            <asp:BoundField DataField="JTask" HeaderText="JTask" SortExpression="JTask" />
+                            <asp:BoundField DataField="JDescription" HeaderText="JDescription" SortExpression="JDescription" />
+                            <asp:BoundField DataField="JDriverDateStart" HeaderText="JDriverDateStart" SortExpression="JDriverDateStart" />
+                            <asp:BoundField DataField="JDriverDateEnd" HeaderText="JDriverDateEnd" SortExpression="JDriverDateEnd" />
+                            <asp:BoundField DataField="JCustDateStart" HeaderText="JCustDateStart" SortExpression="JCustDateStart" />
+                            <asp:BoundField DataField="JCustDateEnd" HeaderText="JCustDateEnd" SortExpression="JCustDateEnd" />
+                            <asp:BoundField DataField="JStatus" HeaderText="JStatus" SortExpression="JStatus" />
+                            <asp:BoundField DataField="JPayment" HeaderText="JPayment" SortExpression="JPayment" />
+                            <asp:BoundField DataField="JDriverDuration" HeaderText="JDriverDuration" SortExpression="JDriverDuration" />
+                            <asp:BoundField DataField="JCustDuration" HeaderText="JCustDuration" SortExpression="JCustDuration" />
+                            <asp:BoundField DataField="JDriverActualCT" HeaderText="JDriverActualCT" SortExpression="JDriverActualCT" />
+                        </Columns>
+                    </asp:GridView>
                 </div>
             </div>
         </div>
@@ -89,6 +118,8 @@
         $("#wrapper").toggleClass("toggled");
     });
     </script>
+
+    </form>
 
 </body>
 </html>
