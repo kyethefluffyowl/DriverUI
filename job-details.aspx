@@ -107,9 +107,8 @@
                                    <div style="display:block;">
                                        <div style="display:inline-block"><asp:DropDownList ID="selfType" runat="server">
                                            <asp:ListItem Selected="True" Value="selectTypeError">Select the item needed for maintenance.</asp:ListItem>
-                                           <asp:ListItem Value="2">Industrial Tyre</asp:ListItem>
-                                           <asp:ListItem Value="1">Industrial Battery</asp:ListItem>
-                                           <asp:ListItem Value="3">Update the code with list of inventory pls</asp:ListItem>
+                                           <asp:ListItem Value="1">Industrial Engine</asp:ListItem>
+                                           <asp:ListItem Value="7">Industrial Wire</asp:ListItem>
                                        </asp:DropDownList></div>
                                        <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
                                            <asp:ListItem Selected="True" Value="1" >1</asp:ListItem>

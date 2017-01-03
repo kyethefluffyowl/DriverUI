@@ -62,15 +62,18 @@ public partial class QR_Decode_Test : System.Web.UI.Page
 
                 updateJobCompletion.Close();
                 Session["statusCol"] = "Completed";
+                
             }
             if ((string)Session["statusCol"] == "Completed")
             {
-                ClientScript.RegisterStartupScript(GetType(), "HidingImageUpload", "document.getElementById('file-upload-picture').style.display = 'none';", true);
-                ClientScript.RegisterStartupScript(GetType(), "HidingInputUpload", "document.getElementById('file-upload').style.display = 'none';", true);
-                ClientScript.RegisterStartupScript(GetType(), "HidingImagePreviewPlaceholder", "document.getElementById('showUploadImage').style.display = 'none';", true);
-                sendQRinfo.Visible = false;
-                textboxResult.Visible = false;
-                labelCompleteJob.Text = "Job Completed";
+//                ClientScript.RegisterStartupScript(GetType(), "HidingImageUpload", "document.getElementById('file-upload-picture').style.display = 'none';", true);
+//                ClientScript.RegisterStartupScript(GetType(), "HidingInputUpload", "document.getElementById('file-upload').style.display = 'none';", true);
+//                ClientScript.RegisterStartupScript(GetType(), "HidingImagePreviewPlaceholder", "document.getElementById('showUploadImage').style.display = 'none';", true);
+//                sendQRinfo.Visible = false;
+//                textboxResult.Visible = false;
+//                labelCompleteJob.Text = "Job Completed";
+                ClientScript.RegisterStartupScript(GetType(), "Refreshing Parent", "window.parent.location.href = window.parent.location.href;", true);
+
             }
             if ((string)Session["statusCol"] != "Completed")
             {
