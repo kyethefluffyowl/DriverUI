@@ -12,10 +12,10 @@
 
 #wrapper {
     padding-left: 0;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 #wrapper.toggled {
@@ -26,15 +26,15 @@
     z-index: 1000;
     position: fixed;
     left: 250px;
-    width: 0;
+    width: 0; /*Orgiginally 0*/
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
     background: #000;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 #wrapper.toggled #sidebar-wrapper {
@@ -110,7 +110,7 @@
     }
 
     #sidebar-wrapper {
-        width: 250px;
+        width:250px; /*Originally 250px*/ 
     }
 
     #wrapper.toggled #sidebar-wrapper {
@@ -126,4 +126,5 @@
         position: relative;
         margin-right: 0;
     }
+
 }

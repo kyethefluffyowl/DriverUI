@@ -73,7 +73,7 @@ ul.tab {
     padding: 0;
     overflow: hidden;
     border: 1px solid #ccc;
-    background-color: #f1f1f1;
+    background-color: rgba(19, 35, 47, 0.9);
 }
 
 /* Float the list items side by side */
@@ -82,7 +82,7 @@ ul.tab li {float: left;}
 /* Style the links inside the list items */
 ul.tab li a {
     display: inline-block;
-    color: black;
+    color: white;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
@@ -94,18 +94,17 @@ ul.tab li a {
 ul.tab li a:hover {
     background-color: #ddd;
 }
-
+ 
 /* Create an active/current tablink class */
 ul.tab li a:focus, .active {
-    background-color: #179b77;
+    background-color: #1ab188;
 }
 
 /* Style the tab content */
 .tabcontent {
     display: none;
     padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
+    border: none;
 }
 
 
@@ -126,7 +125,7 @@ label {
   position: absolute;
   -webkit-transform: translateY(6px);
           transform: translateY(6px);
-  left: 13px;
+  /*left: 13px;*/
   color: rgba(255, 255, 255, 0.5);
   -webkit-transition: all 0.25s ease;
   transition: all 0.25s ease;

@@ -29,17 +29,15 @@
 
 </head>
 
-<body onload="init">
+<body onload="resumeTab();">
 
-    <div id="wrapper">
+    <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="#">
-                        HupLeck Driver
-                    </a>
+                    <a href="#">HupLeck Driver</a>
                 </li>
                 <li>
                     <a href="jobs.aspx">Jobs</a>
@@ -58,6 +56,7 @@
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
+                                            
         <div id="page-content-wrapper">
         <div class="container-fluid">
         <div class="row">
@@ -65,80 +64,125 @@
             <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" /></a> <!--class="btn btn-default"-->
                 <div class="form">
                     <ul class="tab">
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'JobDesc')" id="defaultOpen">Job Description</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Location')">Location</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'ETC')">ETC</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR')">QR</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Maintenance')">Maintenance</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Status')">Status</a></li>
-                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Duration')">Duration</a></li>       
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'JobDesc')" id="JobDescTab">Job Description</a></li>
+                      <!--<asp:Label runat="server" id="testLabel" AssociatedControlID="testLabel" >No Session ):</asp:Label> -->
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Location')" id="LocationTab">Location</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'ETC')" id="ETCTab">ETC</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'QR')" id="QRTab">QR</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Maintenance')" id="MaintenanceTab">Maintenance</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Status');" id="StatusTab">Status</a></li>
+                      <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'EqReturn')" id="EqReturnTab">Equipment Return</a></li>      
                     </ul>
 
                     <div id="JobDesc" class="tabcontent">
                       <h3>Job Description</h3>
-                      <p>Who to meet.</p>
+                      <asp:Label runat="server" ID="JobDescPara" AssociatedControlID="JobDescPara"></asp:Label>                       
                     </div>
                     <div id="Location" class="tabcontent">
                       <h3>Location</h3>
-                      <p>Location goes here</p>
+                      <asp:Label runat="server" ID="LocationPara" AssociatedControlID="LocationPara"></asp:Label>
                       <p>Google Map API goes here.</p>
                     </div>
                     <div id="ETC" class="tabcontent">
                       <h3>ETC</h3>
-                      <p>Estimated Time of Completion</p>
+                      <asp:Label runat="server" ID="ETCPara" AssociatedControlID="ETCPara">Estimated Time of Completion</asp:Label>
                     </div>
                     <div id="QR" class="tabcontent">
                       <h3>Scan your QR Code</h3>
-                      <p>QR Code thing goes here</p>
+                        <iframe id="iframeQR" src="QR_Decode.aspx" frameborder="0" style="width:100%; height:15em; overflow:hidden; "></iframe>
+                        <asp:Label runat="server" ID="QRStatus" BackColor="White"></asp:Label>
                     </div>
                     <div id="Maintenance" class="tabcontent">
                       <h3>Maintenance</h3>
-                        <form runat="server" style="">
-                           <div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
+
+                        <asp:label runat="server" ID="maintainCompletedLabel" Text="You have successfully submitted the report." BackColor="White"></asp:label>
+                        <form runat="server" id="maintainForm" style="">
+                            <!-- Linking the dropdownlist to the database and grabbing out what relates to the job -->
+                            <asp:SqlDataSource ID="dropDownMaintenanceSQL" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID WHERE (JobItems.JItemjobID = @jobID)" >
+                            <SelectParameters>
+                                <asp:SessionParameter Name="jobID" SessionField="jobID" />
+                            </SelectParameters>
+                        </asp:SqlDataSource>
+                        <asp:DropDownList Enabled="false" runat="server" ID="dropDownMaintenance" DataSourceID="dropDownMaintenanceSQL" DataTextField="EName" DataValueField="EquipID" OnDataBound="dropDownMaintenance_DataBound"></asp:DropDownList>
+                            
+
+
+                            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="EquipID" DataSourceID="SqlDataSource1" OnDataBound="GridView1_DataBound">
+            <Columns>
+                <asp:BoundField DataField="EquipID" HeaderText="EquipID" InsertVisible="False" ReadOnly="True" SortExpression="EquipID" />
+                <asp:BoundField DataField="EName" HeaderText="EName" SortExpression="EName" />
+            </Columns>
+        </asp:GridView>
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Maintenance ON Equipment.EquipID = Maintenance.MEquipID WHERE (JobItems.JItemjobID = @jobID) AND (MEquipID IS NOT NULL)">
+            <SelectParameters>
+                <asp:SessionParameter Name="jobID" SessionField="jobID" />
+            </SelectParameters>
+        </asp:SqlDataSource>
+
+                           <div><asp:RadioButton runat="server" Checked="true" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
                                 <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">No Maintenance</asp:Label></div></div>
-                           <div><div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="selfMaintenance" onclick="checkbox1()"/>
-                                <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label></div></div>
-                               <div style="display:block;">
-                                   <div id="selfType" style="display:inline-block"><asp:DropDownList runat="server">
-                                       <asp:ListItem>I001 Tyre</asp:ListItem>
-                                       <asp:ListItem>I002 Battery</asp:ListItem>
-                                       <asp:ListItem>I003 I'm supposed to get the data from the database</asp:ListItem>
-                                   </asp:DropDownList></div>
-                                   <div id="selfQty" style="display:inline-block"><asp:DropDownList runat="server">
-                                       <asp:ListItem>1</asp:ListItem>
-                                       <asp:ListItem>2</asp:ListItem>
-                                       <asp:ListItem>3</asp:ListItem>
-                                       <asp:ListItem>4</asp:ListItem>
-                                   </asp:DropDownList></div>
+                           <div>
+                               <div>
+                                   <asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="selfMaintenance" onclick="checkbox1()"/>
+                                   <div style="display:inline-block">
+                                       <asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label>
+                                   </div>
                                </div>
-                               <div id="selfDesc" style="display:block; width:100%;"><asp:TextBox runat="server" Width="100%" Height="3em"></asp:TextBox></div>
-                            </div>
-                           <div><div><asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="outsourceMaintenance" onclick="checkbox2()"/>
-                                <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">Outsource Maintenance</asp:Label></div></div>
-                               <asp:TextBox ID="outsourceText" runat="server" Width="100%" Height="3em"></asp:TextBox>
+                               <div id="selfDetailsDIV" style="display:inline-block;">
+                                   <div style="display:block;">
+                                       <div style="display:inline-block"><asp:DropDownList ID="selfType" runat="server">
+                                           <asp:ListItem Selected="True" Value="selectTypeError">Select the item needed for maintenance.</asp:ListItem>
+                                           <asp:ListItem Value="1">Industrial Engine</asp:ListItem>
+                                           <asp:ListItem Value="7">Industrial Wire</asp:ListItem>
+                                       </asp:DropDownList></div>
+                                       <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
+                                           <asp:ListItem Selected="True" Value="1" >1</asp:ListItem>
+                                           <asp:ListItem Value="2" >2</asp:ListItem>
+                                           <asp:ListItem Value="3" >3</asp:ListItem>
+                                           <asp:ListItem Value="4" >4</asp:ListItem>
+                                           <asp:ListItem Value="5" >5</asp:ListItem>
+                                           <asp:ListItem Value="6" >6</asp:ListItem>
+                                       </asp:DropDownList></div>
+                                   </div>
+                                   <div style="display:block; width:100%;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em"></asp:TextBox></div>
+                               </div>
                            </div>
-                            <asp:Button runat="server" /> <!--Need to find a way to just send data that is selected, not the entire thing-->
+                           <div>
+                               <div>
+                                    <asp:RadioButton runat="server" id="outsourceMaintenance" onclick="checkbox2()" style="width:auto; display:inline-block;" />
+                                    <div style="display:inline-block">
+                                        <asp:Label ForeColor="white" runat="server">Outsource Maintenance</asp:Label>
+                                    </div>
+                               </div>
+                               <asp:TextBox runat="server" ID="outsourceText" Width="100%" Height="3em"></asp:TextBox>
+                           </div>
+                            <div style="float:right; font-size:0.5em; "><asp:Button runat="server" PostBackUrl="~/job-details.aspx" Text="Submit" OnClick="SubmitMaint_Click"/></div>
                         </form>
                     </div>
                     <div id="Status" class="tabcontent">
-                      <h3>Status</h3>
-                      <p>Status of job: Complete/ Incomplete</p>
+                        <h3>Status</h3>
+                        <p><asp:Label runat="server" ID="StatusPara"  AssociatedControlID="StatusPara"></asp:Label></p>
                     </div>
-                    <div id="Duration" class="tabcontent">
-                      <h3>Duration</h3>
-                      <p>Total Elapsed Time:</p>
+                    <div id="EqReturn" class="tabcontent">
+                      <h3>Equipment Return</h3>
+                      <p>Click the button to release the vehicle back into inventory.</p>
+                        <iframe id="iframeEquipment" src="equipment-return.aspx" frameborder="0" style="width:100%; height:5em; overflow:hidden; "></iframe>
+
                     </div>
                 </div>
-            </div></div></div></div>
+        </div>
+        </div>
+        </div>
+        </div>
         <!-- /#page-content-wrapper -->
 
         <script>
-            var noMaintenance, self, selfType, selfQty, selfDesc, outsource, outsourceText;
+            var noMaintenance, self, selfTypeDIV, selfQtyDIV, selfDescDIV, outsource, outsourceText;
             noMaintenance = document.getElementById("noMaintenance");
             self = document.getElementById("selfMaintenance");
-            selfType = document.getElementById("selfType");
-            selfQty = document.getElementById("selfQty");
-            selfDesc = document.getElementById("selfDesc");
+            selfTypeDIV = document.getElementById("selfTypeDiv");
+            selfQtyDIV = document.getElementById("selfQtyDIV");
+            selfDescDIV = document.getElementById("selfDescDIV");
             outsource = document.getElementById("outsourceMaintenance");
             outsourceText = document.getElementById("outsourceText");
 
@@ -146,27 +190,22 @@
                     self.checked = false;
                     outsource.checked = false;
                     outsourceText.style.display = "none";
-                    selfType.style.display = "none";
-                    selfQty.style.display = "none";
-                    selfDesc.style.display = "none";
+                    selfDetailsDIV.style.display = "none";
             }
             function checkbox1() {
                     noMaintenance.checked = false;
                     outsource.checked = false;
                     outsourceText.style.display = "none";
-                    selfType.style.display = "inline-block";
-                    selfQty.style.display = "inline-block";
-                    selfDesc.style.display = "block";
+                    selfDetailsDIV.style.display = "initial";
             }
             function checkbox2() {
                     noMaintenance.checked = false;
                     self.checked = false;
                     outsourceText.style.display = "block";
-                    selfType.style.display = "none";
-                    selfQty.style.display = "none";
-                    selfDesc.style.display = "none";
-
+                    selfDetailsDIV.style.display = "none";
             }
+
+            var lastOpenedTab = $.session.set("NameofSession", "");
 
             function openTab(evt, tabName) {
                 var i, tabcontent, tablinks;
@@ -180,14 +219,28 @@
                 }
                 document.getElementById(tabName).style.display = "block";
                 evt.currentTarget.className += " active";
+
+                lastOpenedTab = tabName;
+                $.session.set("NameofSession", lastOpenedTab + "Tab");
+                
             }
 
-            // Get the element with id="defaultOpen" and click on it
-            document.getElementById("defaultOpen").click();
+            function resumeTab() {
+                var delay = 1000;
+                if (lastOpenedTab == "")
+                { document.getElementById("JobDescTab").click(); }
+                if (lastOpenedTab != "") {
+                document.getElementById($.session.get("NameofSession")).click();
+                    //alert($.session.get("NameofSession"))
+                }
+                document.getElementById("noMaintenance").click(), delay;
+            }
+
+            // Get the element with id="JobDescTab" and click on it
+            //document.getElementById("JobDescTab").click();
             outsourceText.style.display = "none";
-            selfType.style.display = "none";
-            selfQty.style.display = "none";
-            selfDesc.style.display = "none";
+            selfDetailsDIV.style.display = "none";
+
 
         </script>
 
@@ -196,6 +249,7 @@
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
+    <script src="js/jquery.session.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
@@ -206,6 +260,22 @@
           e.preventDefault();
           $("#wrapper").toggleClass("toggled");
       });
+
+        // If job status says "Job completed", it'll hide the iframe
+        if (document.getElementById('QRStatus').innerText != ""){
+            document.getElementById('iframeQR').style.display = 'none';
+        }
+
+
+
+      var mq = window.matchMedia("(min-width: 768px)");
+
+          if (mq.matches) {
+              // if it's more than 768px
+          }
+          else {
+              $("#wrapper").toggleClass("toggled");
+          }
       </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="loginSignupTest.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="testPage4TestingDuh - Copy.aspx.cs" Inherits="_Default" %>
 
 <!DOCTYPE html>
 
@@ -95,6 +95,8 @@ ul.tab li a:focus, .active {
   <h3>Tokyo</h3>
   <p>Tokyo is the capital of Japan.</p>
 </div>
+
+        <asp:DropDownList runat="server" DataValueField="Value" DataTextField="Text">    </asp:DropDownList>
 
 <script>
 

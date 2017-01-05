@@ -29,7 +29,9 @@
 
 </head>
 
-<body>
+<body onload="autoDate">
+
+    <form id="form1" runat="server">
 
     <div id="wrapper">
 
@@ -65,11 +67,81 @@
                         <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" /></a> <!--class="btn btn-default"-->
 
                         <h1>Job History</h1>
-                        <p>The table for job history goes <code>here.</code></p>
+                        <!-- Date Selection -->
+                        <input type="date" id="dateStart" style="display:inline-block"/>
+                        <p style="display:inline-block">to</p>
+                        <input type="date" id="dateEnd" title="End Date" style="display:inline-block"/>
+                        <button id="dateAutoButton" onclick="dateAuto">date pls</button>
+                        <asp:TextBox runat="server" id="dateStartText"></asp:TextBox>
+                        <asp:TextBox runat="server" id="dateEndText" ></asp:TextBox>
+                        <asp:Button runat="server" ID="dateSelectSubmit" OnClick="dateSelectSubmit_Click" Text="DO IT"/>
 
+                        <!-- Total Duration and Pay -->
+                        <p>Total Duration: <asp:Label runat="server" ID="totalDuration"></asp:Label> </p>
+                        <p>Total Pay: $<asp:Label runat="server" ID="totalPay"></asp:Label></p>
+
+                        <asp:SqlDataSource ID="jobHistorySQL" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE ([JStatus] = @JStatus)">
+                        <SelectParameters>
+                            <asp:Parameter DefaultValue="Completed" Name="JStatus" Type="String" />
+                        </SelectParameters>
+                    </asp:SqlDataSource>
+                        <asp:SqlDataSource ID="jobHistoryWithDate" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs WHERE ([JStatus] = 'Completed') AND (JDriverDateStart BETWEEN @mStartDate AND @mEndDate)">
+                            <SelectParameters>
+                                <asp:SessionParameter DefaultValue="" Name="mStartDate" SessionField="dateStartSession" />
+                                <asp:SessionParameter Name="mEndDate" SessionField="dateEndSession" />
+                            </SelectParameters>
+                        </asp:SqlDataSource>
+                        <asp:GridView ID="jobHistoryGridview" runat="server" DataSourceID="jobHistorySQL" OnRowDataBound="jobHistoryGridview_RowDataBound" OnSelectedIndexChanged="jobHistoryGridview_SelectedIndexChanged" AutoGenerateColumns="False" DataKeyNames="JobID">
+                        <Columns>
+                            <asp:ButtonField Text="Select" CommandName="Select" ItemStyle-Width="" />
+                            <asp:BoundField DataField="JobID" HeaderText="JobID" InsertVisible="False" ReadOnly="True" SortExpression="JobID" />
+                            <asp:BoundField DataField="JCustID" HeaderText="JCustID" SortExpression="JCustID" />
+                            <asp:BoundField DataField="JDriverID" HeaderText="JDriverID" SortExpression="JDriverID" />
+                            <asp:BoundField DataField="JDestination" HeaderText="JDestination" SortExpression="JDestination" />
+                            <asp:BoundField DataField="JTask" HeaderText="JTask" SortExpression="JTask" />
+                            <asp:BoundField DataField="JDescription" HeaderText="JDescription" SortExpression="JDescription" />
+                            <asp:BoundField DataField="JDriverDateStart" HeaderText="JDriverDateStart" SortExpression="JDriverDateStart" />
+                            <asp:BoundField DataField="JDriverDateEnd" HeaderText="JDriverDateEnd" SortExpression="JDriverDateEnd" />
+                            <asp:BoundField DataField="JCustDateStart" HeaderText="JCustDateStart" SortExpression="JCustDateStart" />
+                            <asp:BoundField DataField="JCustDateEnd" HeaderText="JCustDateEnd" SortExpression="JCustDateEnd" />
+                            <asp:BoundField DataField="JStatus" HeaderText="JStatus" SortExpression="JStatus" />
+                            <asp:BoundField DataField="JPayment" HeaderText="JPayment" SortExpression="JPayment" />
+                            <asp:BoundField DataField="JDriverDuration" HeaderText="JDriverDuration" SortExpression="JDriverDuration" />
+                            <asp:BoundField DataField="JCustDuration" HeaderText="JCustDuration" SortExpression="JCustDuration" />
+                            <asp:BoundField DataField="JDriverActualCT" HeaderText="JDriverActualCT" SortExpression="JDriverActualCT" />
+                            <asp:BoundField DataField="JCustPayPrice" HeaderText="JCustPayPrice" SortExpression="JCustPayPrice" />
+                            <asp:BoundField DataField="JQR" HeaderText="JQR" SortExpression="JQR" />
+                        </Columns>
+                    </asp:GridView>
+
+                        <!--Gridview with date-->
+                        <asp:GridView ID="jobHistoryDateGridview" runat="server" AutoGenerateColumns="False" DataKeyNames="JobID" DataSourceID="jobHistoryWithDate" OnRowDataBound="jobHistoryDateGridview_RowDataBound">
+                <Columns>
+                    <asp:ButtonField Text="Select" CommandName="Select" ItemStyle-Width="" />
+                    <asp:BoundField DataField="JobID" HeaderText="JobID" InsertVisible="False" ReadOnly="True" SortExpression="JobID" />
+                    <asp:BoundField DataField="JCustID" HeaderText="JCustID" SortExpression="JCustID" />
+                    <asp:BoundField DataField="JDriverID" HeaderText="JDriverID" SortExpression="JDriverID" />
+                    <asp:BoundField DataField="JDestination" HeaderText="JDestination" SortExpression="JDestination" />
+                    <asp:BoundField DataField="JTask" HeaderText="JTask" SortExpression="JTask" />
+                    <asp:BoundField DataField="JDescription" HeaderText="JDescription" SortExpression="JDescription" />
+                    <asp:BoundField DataField="JDriverDateStart" HeaderText="JDriverDateStart" SortExpression="JDriverDateStart" />
+                    <asp:BoundField DataField="JDriverDateEnd" HeaderText="JDriverDateEnd" SortExpression="JDriverDateEnd" />
+                    <asp:BoundField DataField="JCustDateStart" HeaderText="JCustDateStart" SortExpression="JCustDateStart" />
+                    <asp:BoundField DataField="JCustDateEnd" HeaderText="JCustDateEnd" SortExpression="JCustDateEnd" />
+                    <asp:BoundField DataField="JStatus" HeaderText="JStatus" SortExpression="JStatus" />
+                    <asp:BoundField DataField="JPayment" HeaderText="JPayment" SortExpression="JPayment" />
+                    <asp:BoundField DataField="JDriverDuration" HeaderText="JDriverDuration" SortExpression="JDriverDuration" />
+                    <asp:BoundField DataField="JCustDuration" HeaderText="JCustDuration" SortExpression="JCustDuration" />
+                    <asp:BoundField DataField="JDriverActualCT" HeaderText="JDriverActualCT" SortExpression="JDriverActualCT" />
+                    <asp:BoundField DataField="JCustPayPrice" HeaderText="JCustPayPrice" SortExpression="JCustPayPrice" />
+                    <asp:BoundField DataField="JQR" HeaderText="JQR" SortExpression="JQR" />
+                </Columns>
+            </asp:GridView>
                     </div>
+
                 </div>
             </div>
+            
         </div>
         <!-- /#page-content-wrapper -->
 
@@ -82,13 +154,42 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
-    <!-- Menu Toggle Script -->
     <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
+        var dateApp = {};
+        var d, e, f;
+        dateApp.dateSelectStart = d;
+        dateApp.dateSelectEnd = e;
+
+        document.getElementById('dateStart').onblur = function (e) {
+            if (this.value != dateApp.dateSelectStart) {
+                //set last value to current value
+                dateApp.dateSelectStart = this.value;
+                d = new Date(dateApp.dateSelectStart);
+                d.setHours(12);
+                //alert(d.toLocaleString());
+                document.getElementById("<%=dateStartText.ClientID%>").value = d.toISOString();
+            }
+        };
+
+        document.getElementById('dateEnd').onblur = function (e) {
+            if (this.value != dateApp.dateSelectEnd) {
+                //set last value to current value
+                dateApp.dateSelectEnd = this.value;
+                e = new Date(dateApp.dateSelectEnd);
+                e.setHours(12);
+                //alert(e.toLocaleString());
+                document.getElementById("<%=dateEndText.ClientID%>").value = e.toISOString();
+            }
+        };
+
+        //Menu Toggle Script
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
     </script>
+
+    </form>
 
 </body>
 </html>

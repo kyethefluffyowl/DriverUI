@@ -31,6 +31,8 @@
 
 <body>
 
+    <form id="form1" runat="server">
+
     <div id="wrapper">
 
         <!-- Sidebar -->
@@ -65,15 +67,44 @@
                         <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" /></a> <!--class="btn btn-default"-->
 
                         <h1>Jobs on Hand</h1>
-                        <p>This is where the job list goes. Like right <code>here</code>.</p>
+                        <asp:GridView runat="server" AutoGenerateColumns="False" DataKeyNames="JobID" DataSourceID="SqlDataSource1" ID="jobGridView" OnSelectedIndexChanged="jobGridView_SelectedIndexChanged">
+                            <Columns>
+                                <asp:ButtonField Text="Select" CommandName="Select" ItemStyle-Width="" />
+                                <asp:BoundField DataField="JobID" HeaderText="JobID" InsertVisible="False" ReadOnly="True" SortExpression="JobID" />
+                                <asp:BoundField DataField="JCustID" HeaderText="JCustID" SortExpression="JCustID" />
+                                <asp:BoundField DataField="JDriverID" HeaderText="JDriverID" SortExpression="JDriverID" />
+                                <asp:BoundField DataField="JDestination" HeaderText="JDestination" SortExpression="JDestination" />
+                                <asp:BoundField DataField="JTask" HeaderText="JTask" SortExpression="JTask" />
+                                <asp:BoundField DataField="JDescription" HeaderText="JDescription" SortExpression="JDescription" />
+                                <asp:BoundField DataField="JDriverDateStart" HeaderText="JDriverDateStart" SortExpression="JDriverDateStart" />
+                                <asp:BoundField DataField="JDriverDateEnd" HeaderText="JDriverDateEnd" SortExpression="JDriverDateEnd" />
+                                <asp:BoundField DataField="JCustDateStart" HeaderText="JCustDateStart" SortExpression="JCustDateStart" />
+                                <asp:BoundField DataField="JCustDateEnd" HeaderText="JCustDateEnd" SortExpression="JCustDateEnd" />
+                                <asp:BoundField DataField="JStatus" HeaderText="JStatus" SortExpression="JStatus" />
+                                <asp:BoundField DataField="JPayment" HeaderText="JPayment" SortExpression="JPayment" />
+                                <asp:BoundField DataField="JDriverDuration" HeaderText="JDriverDuration" SortExpression="JDriverDuration" />
+                                <asp:BoundField DataField="JCustDuration" HeaderText="JCustDuration" SortExpression="JCustDuration" />
+                                <asp:BoundField DataField="JDriverActualCT" HeaderText="JDriverActualCT" SortExpression="JDriverActualCT" />
+                            </Columns>
+                        </asp:GridView>
 
+                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs INNER JOIN JobItems ON Jobs.JobID = JobItems.JItemjobID INNER JOIN Equipment ON JobItems.JItemEquipID = Equipment.EquipID WHERE (Equipment.EAvailability = 'no') AND ([JDriverID] = @JDriverID) AND (Jobs.JStatus = 'Incomplete')" >
+                            <SelectParameters>
+                                <asp:SessionParameter Name="JDriverID" SessionField="driverID" Type="Int32" />
+                            </SelectParameters>
+                        </asp:SqlDataSource>
                     </div>
                 </div>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
 
+        <!--To make the entire row clickable-->
+        <!--http://www.aspsnippets.com/Articles/Selecting-GridView-Row-by-clicking-anywhere-on-the-Row.aspx-->
+
+
     </div>
+
     <!-- /#wrapper -->
 
     <!-- jQuery -->
@@ -89,6 +120,8 @@
         $("#wrapper").toggleClass("toggled");
     });
     </script>
+
+    </form>
 
 </body>
 </html>
