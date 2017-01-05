@@ -56,6 +56,7 @@
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
+                                            
         <div id="page-content-wrapper">
         <div class="container-fluid">
         <div class="row">
@@ -88,12 +89,36 @@
                     </div>
                     <div id="QR" class="tabcontent">
                       <h3>Scan your QR Code</h3>
-                        <iframe id="iframeQR" src="QR_Decode.aspx" style="width:100%; height:15em; overflow:hidden;"></iframe>
+                        <iframe id="iframeQR" src="QR_Decode.aspx" frameborder="0" style="width:100%; height:15em; overflow:hidden; "></iframe>
                         <asp:Label runat="server" ID="QRStatus" BackColor="White"></asp:Label>
                     </div>
                     <div id="Maintenance" class="tabcontent">
                       <h3>Maintenance</h3>
-                        <form runat="server" style="">
+
+                        <asp:label runat="server" ID="maintainCompletedLabel" Text="You have successfully submitted the report." BackColor="White"></asp:label>
+                        <form runat="server" id="maintainForm" style="">
+                            <!-- Linking the dropdownlist to the database and grabbing out what relates to the job -->
+                            <asp:SqlDataSource ID="dropDownMaintenanceSQL" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID WHERE (JobItems.JItemjobID = @jobID)" >
+                            <SelectParameters>
+                                <asp:SessionParameter Name="jobID" SessionField="jobID" />
+                            </SelectParameters>
+                        </asp:SqlDataSource>
+                        <asp:DropDownList Enabled="false" runat="server" ID="dropDownMaintenance" DataSourceID="dropDownMaintenanceSQL" DataTextField="EName" DataValueField="EquipID" OnDataBound="dropDownMaintenance_DataBound"></asp:DropDownList>
+                            
+
+
+                            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="EquipID" DataSourceID="SqlDataSource1" OnDataBound="GridView1_DataBound">
+            <Columns>
+                <asp:BoundField DataField="EquipID" HeaderText="EquipID" InsertVisible="False" ReadOnly="True" SortExpression="EquipID" />
+                <asp:BoundField DataField="EName" HeaderText="EName" SortExpression="EName" />
+            </Columns>
+        </asp:GridView>
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Maintenance ON Equipment.EquipID = Maintenance.MEquipID WHERE (JobItems.JItemjobID = @jobID) AND (MEquipID IS NOT NULL)">
+            <SelectParameters>
+                <asp:SessionParameter Name="jobID" SessionField="jobID" />
+            </SelectParameters>
+        </asp:SqlDataSource>
+
                            <div><asp:RadioButton runat="server" Checked="true" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
                                 <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">No Maintenance</asp:Label></div></div>
                            <div>
@@ -131,7 +156,7 @@
                                </div>
                                <asp:TextBox runat="server" ID="outsourceText" Width="100%" Height="3em"></asp:TextBox>
                            </div>
-                            <div style="float:right; font-size:0.5em; "><asp:Button runat="server" Text="Submit" OnClick="SubmitMaint_Click"/></div><!--Need to find a way to just send data that is selected, not the entire thing-->
+                            <div style="float:right; font-size:0.5em; "><asp:Button runat="server" PostBackUrl="~/job-details.aspx" Text="Submit" OnClick="SubmitMaint_Click"/></div>
                         </form>
                     </div>
                     <div id="Status" class="tabcontent">
@@ -141,6 +166,8 @@
                     <div id="EqReturn" class="tabcontent">
                       <h3>Equipment Return</h3>
                       <p>Click the button to release the vehicle back into inventory.</p>
+                        <iframe id="iframeEquipment" src="equipment-return.aspx" frameborder="0" style="width:100%; height:5em; overflow:hidden; "></iframe>
+
                     </div>
                 </div>
         </div>
@@ -199,13 +226,14 @@
             }
 
             function resumeTab() {
+                var delay = 1000;
                 if (lastOpenedTab == "")
                 { document.getElementById("JobDescTab").click(); }
                 if (lastOpenedTab != "") {
                 document.getElementById($.session.get("NameofSession")).click();
                     //alert($.session.get("NameofSession"))
                 }
-                document.getElementById("noMaintenance").click();
+                document.getElementById("noMaintenance").click(), delay;
             }
 
             // Get the element with id="JobDescTab" and click on it
@@ -232,6 +260,13 @@
           e.preventDefault();
           $("#wrapper").toggleClass("toggled");
       });
+
+        // If job status says "Job completed", it'll hide the iframe
+        if (document.getElementById('QRStatus').innerText != ""){
+            document.getElementById('iframeQR').style.display = 'none';
+        }
+
+
 
       var mq = window.matchMedia("(min-width: 768px)");
 

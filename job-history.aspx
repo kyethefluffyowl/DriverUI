@@ -160,7 +160,7 @@
         dateApp.dateSelectStart = d;
         dateApp.dateSelectEnd = e;
 
-        document.getElementById('dateStart').ondeactivate = function (e) {
+        document.getElementById('dateStart').onblur = function (e) {
             if (this.value != dateApp.dateSelectStart) {
                 //set last value to current value
                 dateApp.dateSelectStart = this.value;
@@ -171,7 +171,7 @@
             }
         };
 
-        document.getElementById('dateEnd').ondeactivate = function (e) {
+        document.getElementById('dateEnd').onblur = function (e) {
             if (this.value != dateApp.dateSelectEnd) {
                 //set last value to current value
                 dateApp.dateSelectEnd = this.value;

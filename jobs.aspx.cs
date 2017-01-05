@@ -11,6 +11,8 @@ public partial class _Default : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         Session["driverID"] = "1"; //Parse the driverID from the login page actual
+
+        Session["intmary"] = ""; //Used for calculating if the maintenance thing is done
     }
 
     protected void jobGridView_SelectedIndexChanged(object sender, EventArgs e)

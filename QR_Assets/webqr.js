@@ -89,8 +89,10 @@ function parseToText()
     var delay = 200; //5 seconds
     setTimeout(function () {
         var info = document.getElementById("result").innerHTML.toString();
+        //alert('yolobolo');
         document.getElementById('textboxResult').innerText = info;
-        //alert(info);
+        //document.getElementById('').innerText = info;
+        
 
         //Summoning the textboxchanged automatically when value changes BUT it reloads the page and removes the image preview also ):
         //document.getElementById("showUploadImage").focus();

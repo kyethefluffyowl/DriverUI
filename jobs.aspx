@@ -88,7 +88,7 @@
                             </Columns>
                         </asp:GridView>
 
-                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE ([JDriverID] = @JDriverID)" >
+                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs INNER JOIN JobItems ON Jobs.JobID = JobItems.JItemjobID INNER JOIN Equipment ON JobItems.JItemEquipID = Equipment.EquipID WHERE (Equipment.EAvailability = 'no') AND ([JDriverID] = @JDriverID) AND (Jobs.JStatus = 'Incomplete')" >
                             <SelectParameters>
                                 <asp:SessionParameter Name="JDriverID" SessionField="driverID" Type="Int32" />
                             </SelectParameters>
