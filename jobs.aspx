@@ -11,14 +11,13 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
 
-    <title>Simple Sidebar - Start Bootstrap Template</title>
+    <title>Driver Jobs</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet"/>
 
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet"/>
-    <link href="css/login-signup.css" rel="stylesheet" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,7 +52,7 @@
                     <a href="#">Emergency Contact</a>
                 </li>
                 <li>
-                    <a href="#">Sign Out</a>
+                    <a href="signout.aspx">Sign Out</a>
                 </li>
             </ul>
         </div>
@@ -88,9 +87,9 @@
                             </Columns>
                         </asp:GridView>
 
-                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs INNER JOIN JobItems ON Jobs.JobID = JobItems.JItemjobID INNER JOIN Equipment ON JobItems.JItemEquipID = Equipment.EquipID WHERE (Equipment.EAvailability = 'no') AND ([JDriverID] = @JDriverID) AND (Jobs.JStatus = 'Incomplete')" >
+                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs INNER JOIN JobItems ON Jobs.JobID = JobItems.JItemjobID INNER JOIN Equipment ON JobItems.JItemEquipID = Equipment.EquipID WHERE (Equipment.EAvailability = 'yes') AND ([JDriverID] = @JDriverID) AND (Jobs.JStatus = 'Incomplete')" >
                             <SelectParameters>
-                                <asp:SessionParameter Name="JDriverID" SessionField="driverID" Type="Int32" />
+                                <asp:SessionParameter Name="JDriverID" SessionField="driverID" />
                             </SelectParameters>
                         </asp:SqlDataSource>
                     </div>

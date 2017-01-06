@@ -10,18 +10,22 @@ public partial class _Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        Session["driverID"] = "1"; //Parse the driverID from the login page actual
-
+        if ((string)Session["sflag"] != "in")
+        {
+            Response.Redirect("login.aspx");
+        }
         Session["intmary"] = ""; //Used for calculating if the maintenance thing is done
+        
     }
 
     protected void jobGridView_SelectedIndexChanged(object sender, EventArgs e)
     {
         //http://www.aspsnippets.com/Articles/How-to-get-Selected-Row-cell-value-from-GridView-in-ASPNet.aspx
+        //testserverupdate
 
         string jobID = jobGridView.SelectedRow.Cells[1].Text;               Session["jobID"] = jobID.ToString();
         string custID = jobGridView.SelectedRow.Cells[2].Text;              Session["custID"] = custID.ToString();
-        string driverID = jobGridView.SelectedRow.Cells[3].Text;            Session["driverID"] = driverID.ToString();
+        //string driverID = jobGridView.SelectedRow.Cells[3].Text;            Session["driverID"] = driverID.ToString();
         string location = jobGridView.SelectedRow.Cells[4].Text;            Session["locationCol"] = location.ToString();
         string task = jobGridView.SelectedRow.Cells[5].Text;                Session["taskCol"] = task.ToString();
         string jobDesc = jobGridView.SelectedRow.Cells[6].Text;             Session["jobDescCol"] = jobDesc.ToString();

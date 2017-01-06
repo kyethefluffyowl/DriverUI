@@ -26,6 +26,7 @@ public partial class _Default : System.Web.UI.Page
 
             releaseVehicle.Close();
         }
+        ClientScript.RegisterStartupScript(GetType(), "Refreshing Parent", "window.parent.location.href = window.parent.location.href;", true);
 
     }
 }

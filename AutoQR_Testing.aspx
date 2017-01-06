@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="equipment-return.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AutoQR_Testing.aspx.cs" Inherits="_Default" %>
 
 <!DOCTYPE html>
 
@@ -11,7 +11,7 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
 
-    <title>Return Equipment</title>
+    <title>Simple Sidebar - Start Bootstrap Template</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet"/>
@@ -27,12 +27,13 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+
 </head>
 
 
-<body style="background-color:#24323D;">
-    <form runat="server">
-        <asp:Button runat="server" text="Release Vehicle" ID="releaseVehicleButton" OnClick="releaseVehicleButton_Click" />
-    </form>
+<body>
+
+     
 </body>
 </html>

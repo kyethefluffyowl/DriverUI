@@ -47,13 +47,13 @@
                     <input id="file-upload" style="display:none; visibility: hidden;" type="file" onchange="handleFiles(this.files); readURL(this); parseToText();" /> <!--Clicking on the image activates to choose a photo-->     
                     <!--Parsing the data from the canvas (below) to the text box-->
                     <div style="display:block;">
-                        <asp:TextBox runat="server" ID="textboxResult" Enabled="true" AutoPostBack="true" Width="5em"></asp:TextBox>
-                        <asp:Label runat="server" ID="labelResult" Text="This textbox is here to display the result. It will be removed in the final version" ></asp:Label>
+                        <asp:TextBox runat="server" ClientIDMode="Static" ID="textboxResult" Enabled="true" AutoPostBack="true" Width="5em"></asp:TextBox>
+                        <asp:Label runat="server" ClientIDMode="Static" ID="labelResult" Text="This textbox is here to display the result. It will be removed in the final version" ></asp:Label>
                         <!--Old button-->
                         <!--<button id="resultTXTButton" onclick="document.getElementById('textboxResult').innerText = document.getElementById('result').innerHTML.toString()">Complete Job</button>-->
                     </div>
                     <div style="display:block">
-                        <asp:Button runat="server" ID="sendQRinfo" OnClick="sendQRinfo_Click" Text="COMPLETE JOB"/>
+                        <asp:Button runat="server" ID="sendQRinfo" OnClick="sendQRinfo_Click" OnClientClick="parseToText();" Text="COMPLETE JOB"/>
                         <asp:Label runat="server" ID="labelCompleteJob"></asp:Label>
                     </div>
                 </div>
@@ -62,7 +62,14 @@
 
                 <!--The Canvas Image Data Lives Here | These 3 lines are vvvvvv impt thx-->
                 <div id="outdiv" style="display:none; height:auto;"></div> <!--Actual Canvas will be Drawn here in JS-->
-                <asp:HiddenField runat="server" ID="result"/> <!--Where the decoded result actually stays to parse to Canvas.-->
+                <asp:HiddenField runat="server" ID="result" ClientIDMode="Static"/> 
+                <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE (([JQR] = @JQR) AND ([JobID] = @JobID))">
+                    <SelectParameters>
+                        <asp:SessionParameter Name="JQR" SessionField="sQRResult" Type="String" />
+                        <asp:SessionParameter Name="JobID" SessionField="jobID" Type="Int32" />
+                    </SelectParameters>
+                </asp:SqlDataSource>
+                <!--Where the decoded result actually stays to parse to Canvas.-->
                 <canvas id="qr-canvas"  style="display:none;" width="10" height="10" ></canvas> <!--Canvas to draw image in HTML-->
             </div>
         </div>

@@ -10,16 +10,11 @@ public partial class _Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        /*SqlConnection checkMaintenance = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-        using (checkMaintenance)
+        if ((string)Session["sflag"] != "in")
         {
-            checkMaintenance.Open();
-            SqlCommand cmd = new SqlCommand("SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID WHERE (JobItems.JItemjobID = @jobID) AND (MEquipID NULL)", checkMaintenance);
-            cmd.Parameters.AddWithValue("@jobID", Session["jobID"]);
-            int result = cmd.ExecuteNonQuery();
-            
-            checkMaintenance.Close();
-        }*/
+            Response.Redirect("login.aspx");
+        }
+
         //Description Tab
         JobDescPara.Text = (string)Session["jobDescCol"];
 

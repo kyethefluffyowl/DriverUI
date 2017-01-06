@@ -53,7 +53,7 @@
                     <a href="#">Emergency Contact</a>
                 </li>
                 <li>
-                    <a href="#">Sign Out</a>
+                    <a href="signout.aspx">Sign Out</a>
                 </li>
             </ul>
         </div>
@@ -80,15 +80,17 @@
                         <p>Total Duration: <asp:Label runat="server" ID="totalDuration"></asp:Label> </p>
                         <p>Total Pay: $<asp:Label runat="server" ID="totalPay"></asp:Label></p>
 
-                        <asp:SqlDataSource ID="jobHistorySQL" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE ([JStatus] = @JStatus)">
+                        <asp:SqlDataSource ID="jobHistorySQL" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE ([JStatus] = @JStatus) AND ([JDriverID] = @driverID)">
                         <SelectParameters>
                             <asp:Parameter DefaultValue="Completed" Name="JStatus" Type="String" />
+                            <asp:SessionParameter Name="driverID" SessionField="driverID" />
                         </SelectParameters>
                     </asp:SqlDataSource>
-                        <asp:SqlDataSource ID="jobHistoryWithDate" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs WHERE ([JStatus] = 'Completed') AND (JDriverDateStart BETWEEN @mStartDate AND @mEndDate)">
+                        <asp:SqlDataSource ID="jobHistoryWithDate" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs WHERE ([JStatus] = 'Completed') AND (JDriverDateStart BETWEEN @mStartDate AND @mEndDate) AND ([JDriverID] = @driverID)">
                             <SelectParameters>
                                 <asp:SessionParameter DefaultValue="" Name="mStartDate" SessionField="dateStartSession" />
                                 <asp:SessionParameter Name="mEndDate" SessionField="dateEndSession" />
+                                <asp:SessionParameter Name="driverID" SessionField="driverID" />
                             </SelectParameters>
                         </asp:SqlDataSource>
                         <asp:GridView ID="jobHistoryGridview" runat="server" DataSourceID="jobHistorySQL" OnRowDataBound="jobHistoryGridview_RowDataBound" OnSelectedIndexChanged="jobHistoryGridview_SelectedIndexChanged" AutoGenerateColumns="False" DataKeyNames="JobID">

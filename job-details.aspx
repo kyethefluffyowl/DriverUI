@@ -49,7 +49,7 @@
                     <a href="#">Emergency Contact</a>
                 </li>
                 <li>
-                    <a href="#">Sign Out</a>
+                    <a href="signout.aspx">Sign Out</a>
                 </li>
             </ul>
         </div>

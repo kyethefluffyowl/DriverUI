@@ -10,7 +10,16 @@ public partial class _Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        if ((string)Session["sflag"] != "in")
+        {
+            Response.Redirect("login.aspx");
+        }
+    }
 
+    protected void Page_Unload (object sender, EventArgs e)
+    {
+        jobHistoryGridview.Visible = true;
+        jobHistoryDateGridview.Visible = false;
     }
 
     protected void jobHistoryGridview_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -36,23 +45,26 @@ public partial class _Default : System.Web.UI.Page
         {
             using (updateDriverHistoryView)
             {
-                updateDriverHistoryView.Open();
-                //calculating total duration worked
-                SqlCommand cmdDurationTotal = new SqlCommand("SELECT SUM(JDriverDuration) FROM Jobs WHERE JDriverID = @sDriverID AND JStatus = @sStatus;", updateDriverHistoryView);
-                cmdDurationTotal.Parameters.AddWithValue("@sDriverID", (string)Session["driverID"]);
-                cmdDurationTotal.Parameters.AddWithValue("@sStatus", "Completed");
-                string sDriverDuration = cmdDurationTotal.ExecuteScalar().ToString();
-                totalDuration.Text = sDriverDuration.ToString();
+                    updateDriverHistoryView.Open();
+                    //calculating total duration worked
+                    SqlCommand cmdDurationTotal = new SqlCommand("SELECT SUM(JDriverDuration) FROM Jobs WHERE JDriverID = @sDriverID AND JStatus = @sStatus;", updateDriverHistoryView);
+                    cmdDurationTotal.Parameters.AddWithValue("@sDriverID", (string)Session["driverID"]);
+                    cmdDurationTotal.Parameters.AddWithValue("@sStatus", "Completed");
+                    string sDriverDuration = cmdDurationTotal.ExecuteScalar().ToString();
+                    totalDuration.Text = sDriverDuration.ToString();
 
-                //calculating total pay
-                SqlCommand cmdDriverWage = new SqlCommand("SELECT DriverHourWage FROM Drivers WHERE DriverID = @sDriverID;", updateDriverHistoryView);
-                cmdDriverWage.Parameters.AddWithValue("@sDriverID", (string)Session["driverID"]);
-                string sDriverWage = cmdDriverWage.ExecuteScalar().ToString();
-                decimal iDriverWage = Convert.ToDecimal(sDriverWage);
-                int iDuration = Convert.ToInt32(sDriverDuration);
-                decimal iTotalPay = iDriverWage * iDuration;
-                totalPay.Text = String.Format("{0:0.00}", iTotalPay); //shows only 2dp
-
+                try
+                {
+                    //calculating total pay
+                    SqlCommand cmdDriverWage = new SqlCommand("SELECT DriverHourWage FROM Drivers WHERE DriverID = @sDriverID;", updateDriverHistoryView);
+                    cmdDriverWage.Parameters.AddWithValue("@sDriverID", (string)Session["driverID"]);
+                    string sDriverWage = cmdDriverWage.ExecuteScalar().ToString();
+                    decimal iDriverWage = Convert.ToDecimal(sDriverWage);
+                    int iDuration = Convert.ToInt32(sDriverDuration);
+                    decimal iTotalPay = iDriverWage * iDuration;
+                    totalPay.Text = String.Format("{0:0.00}", iTotalPay); //shows only 2dp
+                }
+                catch {ClientScript.RegisterStartupScript(GetType(), "noPay", "alert('There is nothing to show'); ", true); }
                 updateDriverHistoryView.Close();
 
             }
@@ -90,8 +102,9 @@ public partial class _Default : System.Web.UI.Page
             updateDriverHistoryView.Close();
         }
         jobHistoryGridview.Visible = false;
+        jobHistoryDateGridview.Visible = true;
 
-
+        try { 
         if ((string)Session["driverID"] != "")
         {
             SqlConnection updateDriverHistoryView1 = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
@@ -121,6 +134,7 @@ public partial class _Default : System.Web.UI.Page
 
             }
         }
+        } catch { ClientScript.RegisterStartupScript(GetType(), "zero", "There is nothing here", true); }
         if ((string)Session["driverID"] == "")
         {
             ClientScript.RegisterStartupScript(GetType(), "DriverID Error", "alert('There is no driver ID'); ", true);

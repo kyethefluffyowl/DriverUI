@@ -86,17 +86,15 @@ function readURL(input)
 
 function parseToText()
 {
-    var delay = 200; //5 seconds
-    setTimeout(function () {
-        var info = document.getElementById("result").innerHTML.toString();
-        //alert('yolobolo');
-        document.getElementById('textboxResult').innerText = info;
-        //document.getElementById('').innerText = info;
-        
+       var delay = 150; //0.15 seconds
+       setTimeout(function () {
+           // Edge & FF
+           //var info = document.getElementById("result").innerHTML.toString();
+           //document.getElementById('textboxResult').innerText = info.toString();
 
-        //Summoning the textboxchanged automatically when value changes BUT it reloads the page and removes the image preview also ):
-        //document.getElementById("showUploadImage").focus();
-        //document.getElementById("showUploadImage").blur();
+           //Chrome + Edge & FF
+           var info1 = document.getElementById('result').innerText.toString();
+           document.getElementById('textboxResult').value = info1.toString();
     }, delay);
 
 }
