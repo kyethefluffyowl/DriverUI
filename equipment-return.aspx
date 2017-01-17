@@ -27,12 +27,22 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <style>
+        .equipmentReturn {
+            color: #fff;
+            background-color: #058989;
+            font-size: 1.5em;
+            padding:1em;
+            border-radius:3px;
+        }
+    </style>
+
 </head>
 
 
-<body style="background-color:#24323D;">
+<body style="background-color:#fff;">
     <form runat="server">
-        <asp:Button runat="server" text="Release Vehicle" ID="releaseVehicleButton" OnClick="releaseVehicleButton_Click" />
+        <asp:Button runat="server" text="Release Vehicle" ID="releaseVehicleButton" OnClick="releaseVehicleButton_Click" CssClass="equipmentReturn"/>
     </form>
 </body>
 </html>

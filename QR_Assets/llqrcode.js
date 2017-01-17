@@ -228,13 +228,15 @@ var _ca = 21522; var _cb = new Array(new Array(21522, 0), new Array(20773, 1), n
     } else {
         var c = new Image(); c.onload = function () {
             var i = document.createElement("canvas"); var h = i.getContext("2d");
-            var f = document.getElementById("out-canvas"); if (f != null) { var g = f.getContext("2d"); g.clearRect(0, 0, 320, 240); g.drawImage(c, 0, 0, 320, 240) } i.width = c.width; i.height = c.height; h.drawImage(c, 0, 0); qrcode.width = c.width; qrcode.height = c.height; try { qrcode.imagedata = h.getImageData(0, 0, c.width, c.height) } catch (j) {
+            var f = document.getElementById("out-canvas"); if (f != null) { var g = f.getContext("2d"); g.clearRect(0, 0, 320, 240); g.drawImage(c, 0, 0, 320, 240) } i.width = c.width; i.height = c.height; h.drawImage(c, 0, 0); qrcode.width = c.width; qrcode.height = c.height;
+            try { qrcode.imagedata = h.getImageData(0, 0, c.width, c.height) } catch (j) {
                 qrcode.result = "Cross domain image reading not supported in your browser! Save it to your computer then drag and drop the file!";
                 if (qrcode.callback != null) { qrcode.callback(qrcode.result) } return
             } try {
                 qrcode.result = qrcode.process(h)
             } catch (j) {
-                console.log(j); qrcode.result = "error decoding QR Code"
+                console.log(j);
+                alert("Error decoding QR Code. Please ensure the picture is clear and straight.");
             } if (qrcode.callback != null) { qrcode.callback(qrcode.result) } //THIS IS WHERE THE RESULT ACTUALLY IS
 
         }; c.src = d

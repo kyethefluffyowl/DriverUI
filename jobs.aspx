@@ -39,7 +39,7 @@
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     <a href="#">
-                        HupLeck Driver
+                        Hup Leck Driver
                     </a>
                 </li>
                 <li>
@@ -49,7 +49,10 @@
                     <a href="job-history.aspx">History</a>
                 </li>
                 <li>
-                    <a href="#">Emergency Contact</a>
+                    <a href="tel:97235397">Emergency Contact</a>
+                </li>
+                <li>
+                    <a href="driverprofile.aspx">Profile</a>
                 </li>
                 <li>
                     <a href="signout.aspx">Sign Out</a>
@@ -66,30 +69,33 @@
                         <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" /></a> <!--class="btn btn-default"-->
 
                         <h1>Jobs on Hand</h1>
-                        <asp:GridView runat="server" AutoGenerateColumns="False" DataKeyNames="JobID" DataSourceID="SqlDataSource1" ID="jobGridView" OnSelectedIndexChanged="jobGridView_SelectedIndexChanged">
+                        <asp:GridView runat="server" AutoGenerateColumns="False" DataKeyNames="JobID" DataSourceID="SqlDataSource1" ID="jobGridView" OnSelectedIndexChanged="jobGridView_SelectedIndexChanged" OnRowDataBound="jobGridView_RowDataBound" PageSize="25" BorderStyle="None" GridLines="Horizontal" Width="100%">
+                            <AlternatingRowStyle BorderStyle="None" Font-Bold="False" Font-Size="1.3em" Height="1.5em" VerticalAlign="Middle" />
                             <Columns>
                                 <asp:ButtonField Text="Select" CommandName="Select" ItemStyle-Width="" />
-                                <asp:BoundField DataField="JobID" HeaderText="JobID" InsertVisible="False" ReadOnly="True" SortExpression="JobID" />
+                                <asp:BoundField DataField="JobID" HeaderText="Job ID" InsertVisible="False" ReadOnly="True" SortExpression="JobID" />
                                 <asp:BoundField DataField="JCustID" HeaderText="JCustID" SortExpression="JCustID" />
                                 <asp:BoundField DataField="JDriverID" HeaderText="JDriverID" SortExpression="JDriverID" />
                                 <asp:BoundField DataField="JDestination" HeaderText="JDestination" SortExpression="JDestination" />
-                                <asp:BoundField DataField="JTask" HeaderText="JTask" SortExpression="JTask" />
+                                <asp:BoundField DataField="JTask" HeaderText="Task" SortExpression="JTask" />
                                 <asp:BoundField DataField="JDescription" HeaderText="JDescription" SortExpression="JDescription" />
-                                <asp:BoundField DataField="JDriverDateStart" HeaderText="JDriverDateStart" SortExpression="JDriverDateStart" />
+                                <asp:BoundField DataField="JDriverDateStart" HeaderText="Start D/T" SortExpression="JDriverDateStart" />
                                 <asp:BoundField DataField="JDriverDateEnd" HeaderText="JDriverDateEnd" SortExpression="JDriverDateEnd" />
                                 <asp:BoundField DataField="JCustDateStart" HeaderText="JCustDateStart" SortExpression="JCustDateStart" />
                                 <asp:BoundField DataField="JCustDateEnd" HeaderText="JCustDateEnd" SortExpression="JCustDateEnd" />
-                                <asp:BoundField DataField="JStatus" HeaderText="JStatus" SortExpression="JStatus" />
+                                <asp:BoundField DataField="JStatus" HeaderText="Status" SortExpression="JStatus" />
                                 <asp:BoundField DataField="JPayment" HeaderText="JPayment" SortExpression="JPayment" />
                                 <asp:BoundField DataField="JDriverDuration" HeaderText="JDriverDuration" SortExpression="JDriverDuration" />
                                 <asp:BoundField DataField="JCustDuration" HeaderText="JCustDuration" SortExpression="JCustDuration" />
                                 <asp:BoundField DataField="JDriverActualCT" HeaderText="JDriverActualCT" SortExpression="JDriverActualCT" />
                             </Columns>
+                            <PagerSettings PageButtonCount="1" />
+                            <RowStyle BorderColor="#C1E1E1" BorderStyle="None" Font-Size="1.3em" Height="1.5em" VerticalAlign="Middle" />
                         </asp:GridView>
 
-                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM Jobs INNER JOIN JobItems ON Jobs.JobID = JobItems.JItemjobID INNER JOIN Equipment ON JobItems.JItemEquipID = Equipment.EquipID WHERE (Equipment.EAvailability = 'yes') AND ([JDriverID] = @JDriverID) AND (Jobs.JStatus = 'Incomplete')" >
+                        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT * FROM [Jobs] WHERE ([JDriverID] = @JDriverID) ORDER BY [JStatus] DESC" >
                             <SelectParameters>
-                                <asp:SessionParameter Name="JDriverID" SessionField="driverID" />
+                                <asp:SessionParameter Name="JDriverID" SessionField="driverID" DefaultValue="" />
                             </SelectParameters>
                         </asp:SqlDataSource>
                     </div>

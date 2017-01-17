@@ -15,13 +15,12 @@ public partial class _Default : System.Web.UI.Page
             Response.Redirect("login.aspx");
         }
 
-        //Description Tab
+        //Tabs
         JobDescPara.Text = (string)Session["jobDescCol"];
-
-        //Respective Tabs
         LocationPara.Text = (string)Session["locationCol"];
         ETCPara.Text = (string)Session["driverDateEndCol"];
         StatusPara.Text = (string)Session["statusCol"];
+        equipmentCompleteLabel.Text = (string)Session["equipReturn"];
 
         //Marking Status as complete
         if ((string)Session["statusCol"] == "Completed")
@@ -29,6 +28,26 @@ public partial class _Default : System.Web.UI.Page
             ClientScript.RegisterStartupScript(GetType(), "hidingiframe", "document.getElementById('iframeQR').style.display = 'none';", true);
             QRStatus.Text = "Job Completed!";
         }
+
+        //Equipment button invible when submitted
+        SqlConnection checkEqp = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+        using (checkEqp)
+        {
+            checkEqp.Open();
+            SqlCommand checkEqpcmd = new SqlCommand("SELECT Equipment.EAvailability FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Jobs ON JobItems.JItemjobID = Jobs.JobID WHERE Jobs.JobID = @jobID", checkEqp);
+            checkEqpcmd.Parameters.AddWithValue("@jobID", Session["jobID"]);
+            Session["equipReturn"] = checkEqpcmd.ExecuteScalar().ToString();
+            checkEqp.Close();
+        }
+        if ((string)Session["equipReturn"] == "yes")
+        {
+            equipmentCompleteLabel.Text = "equipment submitted";
+        }
+        else if ((string)Session["equipReturn"] == "no")
+        {
+            equipmentCompleteLabel.Visible = false;
+        }
+
 
         if (!IsPostBack)
         {

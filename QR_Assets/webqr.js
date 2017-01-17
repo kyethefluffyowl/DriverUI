@@ -88,13 +88,18 @@ function parseToText()
 {
        var delay = 150; //0.15 seconds
        setTimeout(function () {
+           var info1 = document.getElementById('result').innerText.toString();
+           if (info1 == "") {
+               alert("Please take another photo.");
+           }
+           
+           document.getElementById('textboxResult').value = info1.toString();
+           
            // Edge & FF
            //var info = document.getElementById("result").innerHTML.toString();
+           //alert(info + "<-- Vlaue here. This is no 3.");
            //document.getElementById('textboxResult').innerText = info.toString();
-
-           //Chrome + Edge & FF
-           var info1 = document.getElementById('result').innerText.toString();
-           document.getElementById('textboxResult').value = info1.toString();
+           
     }, delay);
 
 }

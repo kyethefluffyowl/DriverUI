@@ -4,36 +4,75 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <title>autoQR&send</title>
 
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
+    <!--|| This style is for the loading circle ||-->
+    <style>
+    #loader {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      width: 150px;
+      height: 150px;
+      margin: -75px 0 0 -75px;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 1s linear infinite;
+      animation: spin 1s linear infinite;
+    }
 
-    <title>Simple Sidebar - Start Bootstrap Template</title>
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
 
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet"/>
-
-    <!-- Custom CSS -->
-    <link href="css/simple-sidebar.css" rel="stylesheet"/>
-    <link href="css/job-details.css" rel="stylesheet" />
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
 
+    #darkPage {
+        position:absolute;
+        top: 0;
+        left: 0;
+        z-index:0;
+        width:100%;
+        height: 100%;
+        background-color: #000;
+        filter:alpha(opacity=60);
+        opacity: 0.6;
+        display:none;
+        }
 
+
+    </style>
 </head>
-
 
 <body>
 
-     
+    <form runat="server">
+
+        <!--|| This is the button in your form that submits the JQR. ||-->
+        <asp:Button runat="server" Text="Send Email" ID="sendEmail" OnClick="sendEmail_Click" OnClientClick="showPage();"/>     
+
+        <!--|| This is the loading circle and darkening the page ||-->
+        <div id="loader" style="display:none;"></div>
+        <div id="darkPage"></div>
+
+
+        <!--|| This is for the loading circle.  ||-->
+        <script>
+            function showPage() {
+                document.getElementById('darkPage').style.display = 'block';
+                document.getElementById("loader").style.display = "inline-block";
+        }
+        </script>
+
+    </form>
 </body>
 </html>

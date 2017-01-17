@@ -40,7 +40,7 @@
     <form id="form1" runat="server">
     <div id="main" >
         <div id="mainbody" >
-            <div style="display:flex; justify-content:flex-end; float:left;">
+           <div style="display:flex; justify-content:flex-end; float:left;">
                 <div style="display:inline-block;">
                     <!--Selecting a file-->
                     <label id="file-upload-picture" for="file-upload" class="custom-file-upload" style="height: 112px; display: block;"></label> <!--Showing an Image to click on-->
@@ -48,7 +48,7 @@
                     <!--Parsing the data from the canvas (below) to the text box-->
                     <div style="display:block;">
                         <asp:TextBox runat="server" ClientIDMode="Static" ID="textboxResult" Enabled="true" AutoPostBack="true" Width="5em"></asp:TextBox>
-                        <asp:Label runat="server" ClientIDMode="Static" ID="labelResult" Text="This textbox is here to display the result. It will be removed in the final version" ></asp:Label>
+                        <asp:Label runat="server" ClientIDMode="Static" ID="labelResult" Text="" ></asp:Label>
                         <!--Old button-->
                         <!--<button id="resultTXTButton" onclick="document.getElementById('textboxResult').innerText = document.getElementById('result').innerHTML.toString()">Complete Job</button>-->
                     </div>

@@ -19,7 +19,7 @@ public partial class QR_Decode_Test : System.Web.UI.Page
         textboxResult.Attributes.Add("readonly", "readonly");
         labelCompleteJob.Text = "";
 
-        
+
 
     }
 
@@ -31,7 +31,11 @@ public partial class QR_Decode_Test : System.Web.UI.Page
         }
         if (textboxResult.Text != "")
         {
-            DateTime currentDateTime = DateTime.Now;
+            TimeZoneInfo timeZoneInfo; //timezone info
+            DateTime currentDateTime; //declaring datetime var called currentDateTime
+            timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Singapore Standard Time"); // Set the time zone information to Singapore Standard Time (GMT +8)
+            currentDateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo); //Get date and time in Singapore Standard Time (GMT +8)
+
             Session["sQRResult"] = textboxResult.Text.ToString();
             SqlConnection updateJobCompletion = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 

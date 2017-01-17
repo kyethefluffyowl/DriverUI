@@ -27,6 +27,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
 </head>
 
 <body onload="resumeTab();">
@@ -46,7 +47,10 @@
                     <a href="job-history.aspx">History</a>
                 </li>
                 <li>
-                    <a href="#">Emergency Contact</a>
+                    <a href="tel:97235397">Emergency Contact</a>
+                </li>
+                <li>
+                    <a href="driverprofile.aspx">Profile</a>
                 </li>
                 <li>
                     <a href="signout.aspx">Sign Out</a>
@@ -61,7 +65,7 @@
         <div class="container-fluid">
         <div class="row">
         <div class="col-lg-12">
-            <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" /></a> <!--class="btn btn-default"-->
+            <a href="#menu-toggle" id="menu-toggle"><img src="images/hamburger_menu.svg" style="-webkit-filter:invert(1);" /></a> <!--class="btn btn-default"-->
                 <div class="form">
                     <ul class="tab">
                       <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'JobDesc')" id="JobDescTab">Job Description</a></li>
@@ -81,7 +85,6 @@
                     <div id="Location" class="tabcontent">
                       <h3>Location</h3>
                       <asp:Label runat="server" ID="LocationPara" AssociatedControlID="LocationPara"></asp:Label>
-                      <p>Google Map API goes here.</p>
                     </div>
                     <div id="ETC" class="tabcontent">
                       <h3>ETC</h3>
@@ -104,38 +107,24 @@
                             </SelectParameters>
                         </asp:SqlDataSource>
                         <asp:DropDownList Enabled="false" runat="server" ID="dropDownMaintenance" DataSourceID="dropDownMaintenanceSQL" DataTextField="EName" DataValueField="EquipID" OnDataBound="dropDownMaintenance_DataBound"></asp:DropDownList>
-                            
 
-
-                            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="EquipID" DataSourceID="SqlDataSource1" OnDataBound="GridView1_DataBound">
-            <Columns>
-                <asp:BoundField DataField="EquipID" HeaderText="EquipID" InsertVisible="False" ReadOnly="True" SortExpression="EquipID" />
-                <asp:BoundField DataField="EName" HeaderText="EName" SortExpression="EName" />
-            </Columns>
-        </asp:GridView>
-<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Maintenance ON Equipment.EquipID = Maintenance.MEquipID WHERE (JobItems.JItemjobID = @jobID) AND (MEquipID IS NOT NULL)">
-            <SelectParameters>
-                <asp:SessionParameter Name="jobID" SessionField="jobID" />
-            </SelectParameters>
-        </asp:SqlDataSource>
-
-                           <div><asp:RadioButton runat="server" Checked="true" style="width:auto; display:inline-block;" id="noMaintenance" onclick="checkbox0()"/> 
+                           <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="noMaintainClick();"><asp:RadioButton runat="server"  Checked="true" style="width:auto; display:none;" id="noMaintenance" onclick="checkbox0()"/> 
                                 <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">No Maintenance</asp:Label></div></div>
                            <div>
-                               <div>
-                                   <asp:RadioButton runat="server" style="width:auto; display:inline-block;" id="selfMaintenance" onclick="checkbox1()"/>
+                               <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="selfMaintainClick();">
+                                   <asp:RadioButton runat="server" style="width:auto; display:none;" id="selfMaintenance" onclick="checkbox1()"/>
                                    <div style="display:inline-block">
                                        <asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label>
                                    </div>
                                </div>
-                               <div id="selfDetailsDIV" style="display:inline-block;">
+                               <div id="selfDetailsDIV" style="display:inline-block; margin-bottom:1em;">
                                    <div style="display:block;">
-                                       <div style="display:inline-block"><asp:DropDownList ID="selfType" runat="server">
+                                       <div style="display:inline-block; font-size:1.2em; padding:0.3em;"><asp:DropDownList ID="selfType" runat="server">
                                            <asp:ListItem Selected="True" Value="selectTypeError">Select the item needed for maintenance.</asp:ListItem>
                                            <asp:ListItem Value="1">Industrial Engine</asp:ListItem>
                                            <asp:ListItem Value="7">Industrial Wire</asp:ListItem>
                                        </asp:DropDownList></div>
-                                       <div style="display:inline-block"><asp:DropDownList ID="selfQty" runat="server">
+                                       <div style="display:inline-block; font-size:1.2em; padding:0.3em;"><asp:DropDownList ID="selfQty" runat="server">
                                            <asp:ListItem Selected="True" Value="1" >1</asp:ListItem>
                                            <asp:ListItem Value="2" >2</asp:ListItem>
                                            <asp:ListItem Value="3" >3</asp:ListItem>
@@ -144,19 +133,19 @@
                                            <asp:ListItem Value="6" >6</asp:ListItem>
                                        </asp:DropDownList></div>
                                    </div>
-                                   <div style="display:block; width:100%;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em"></asp:TextBox></div>
+                                   <div style="display:block; width:100%; margin-bottom:1em;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em" ForeColor="DarkCyan"></asp:TextBox></div>
                                </div>
                            </div>
                            <div>
-                               <div>
-                                    <asp:RadioButton runat="server" id="outsourceMaintenance" onclick="checkbox2()" style="width:auto; display:inline-block;" />
+                               <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="outsourceMaintainClick();">
+                                    <asp:RadioButton runat="server" id="outsourceMaintenance" onclick="checkbox2()" style="width:auto; display:none;" />
                                     <div style="display:inline-block">
                                         <asp:Label ForeColor="white" runat="server">Outsource Maintenance</asp:Label>
                                     </div>
                                </div>
-                               <asp:TextBox runat="server" ID="outsourceText" Width="100%" Height="3em"></asp:TextBox>
+                               <asp:TextBox runat="server" ID="outsourceText" Width="100%" Height="3em" ForeColor="DarkCyan"></asp:TextBox>
                            </div>
-                            <div style="float:right; font-size:0.5em; "><asp:Button runat="server" PostBackUrl="~/job-details.aspx" Text="Submit" OnClick="SubmitMaint_Click"/></div>
+                            <div style="float:right; font-size:0.5em; background-color:#008b8b; margin:1.2em 0; "><asp:Button runat="server" PostBackUrl="~/job-details.aspx" Text="Submit" OnClick="SubmitMaint_Click"/></div>
                         </form>
                     </div>
                     <div id="Status" class="tabcontent">
@@ -166,8 +155,8 @@
                     <div id="EqReturn" class="tabcontent">
                       <h3>Equipment Return</h3>
                       <p>Click the button to release the vehicle back into inventory.</p>
-                        <iframe id="iframeEquipment" src="equipment-return.aspx" frameborder="0" style="width:100%; height:5em; overflow:hidden; "></iframe>
-
+                        <iframe id="iframeEquipment" src="equipment-return.aspx" frameborder="0" style="width:100%; height:5em; overflow:hidden;"></iframe>
+                        <asp:Label runat="server" ID="equipmentCompleteLabel" BackColor="White" Text="no"></asp:Label>
                     </div>
                 </div>
         </div>
@@ -225,10 +214,22 @@
                 
             }
 
+            function noMaintainClick()
+            {
+                document.getElementById("noMaintenance").click();
+                
+            }
+            function selfMaintainClick() {
+                document.getElementById("selfMaintenance").click();
+            }
+            function outsourceMaintainClick() {
+                document.getElementById("outsourceMaintenance").click();
+            }
+
             function resumeTab() {
                 var delay = 1000;
                 if (lastOpenedTab == "")
-                { document.getElementById("JobDescTab").click(); }
+                { document.getElementById("JobDescTab").click(), delay; }
                 if (lastOpenedTab != "") {
                 document.getElementById($.session.get("NameofSession")).click();
                     //alert($.session.get("NameofSession"))

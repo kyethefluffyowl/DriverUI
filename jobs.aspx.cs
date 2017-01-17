@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data.SqlClient;
 
 public partial class _Default : System.Web.UI.Page
 {
@@ -15,7 +16,9 @@ public partial class _Default : System.Web.UI.Page
             Response.Redirect("login.aspx");
         }
         Session["intmary"] = ""; //Used for calculating if the maintenance thing is done
-        
+
+        //jobGridView.Rows[0].Visible = false;
+
     }
 
     protected void jobGridView_SelectedIndexChanged(object sender, EventArgs e)
@@ -40,5 +43,21 @@ public partial class _Default : System.Web.UI.Page
 
         Response.Redirect("job-details.aspx");
 
+    }
+
+    protected void jobGridView_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        //hides the column but does not affect data extraction
+        e.Row.Cells[2].Visible = false;
+        e.Row.Cells[3].Visible = false;
+        e.Row.Cells[4].Visible = false;
+        e.Row.Cells[6].Visible = false;
+        e.Row.Cells[8].Visible = false;
+        e.Row.Cells[9].Visible = false;
+        e.Row.Cells[10].Visible = false;
+        e.Row.Cells[12].Visible = false;
+        e.Row.Cells[13].Visible = false;
+        e.Row.Cells[14].Visible = false;
+        e.Row.Cells[15].Visible = false;
     }
 }

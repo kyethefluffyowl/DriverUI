@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  background: #000;
+  background: #c1bdba;
   font-family: 'FontAwesome','OpenSans', sans-serif;
 }
 
@@ -26,12 +26,12 @@ a:hover {
 }
 
 .form {
-  background: #fff;
+  background: rgba(19, 35, 47, 0.9);
   padding: 40px;
-  max-width: 100%;
+  max-width: 600px;
   margin: 40px auto;
   border-radius: 4px;
-  box-shadow: 0 2px 5px 2px rgba(19, 35, 47, 0.3);
+  box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
 }
 
 .tab-group {
@@ -41,18 +41,18 @@ a:hover {
 }
 .tab-group:after {
   content: "";
-  display: block;
+  display: table;
   clear: both;
 }
 .tab-group li a {
-  display:inline-block;
+  display: block;
   text-decoration: none;
   padding: 15px;
   background: rgba(160, 179, 176, 0.25);
   color: #a0b3b0;
   font-size: 20px;
   float: left;
-  width: 14%; /*Width for nav tab buttons*/
+  width: 50%;
   text-align: center;
   cursor: pointer;
   -webkit-transition: .5s ease;
@@ -62,51 +62,14 @@ a:hover {
   background: #179b77;
   color: #ffffff;
 }
-ul.tab-group li a:focus, .active {
+.tab-group .active a {
   background: #1ab188;
   color: #ffffff;
 }
 
-ul.tab {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #008b8b;
+.tab-content > div:last-child {
+  display: none;
 }
-
-/* Float the list items side by side */
-ul.tab li {float: left;}
-
-/* Style the links inside the list items */
-ul.tab li a {
-    display: inline-block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: 17px;
-}
-
-/* Change background color of links on hover */
-ul.tab li a:hover {
-    background-color: #008282;
-}
- 
-/* Create an active/current tablink class */
-ul.tab li a:focus, .active {
-    background-color: #005555;
-}
-
-/* Style the tab content */
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: none;
-}
-
-
 
 h1 {
   text-align: center;
@@ -115,17 +78,12 @@ h1 {
   margin: 0 0 40px;
 }
 
-p, h2, h3, h4, h5, h6 {
-    color: #000;
-}
-
-
 label {
   position: absolute;
   -webkit-transform: translateY(6px);
           transform: translateY(6px);
-  /*left: 13px;*/
-  color: #005555;
+  left: 13px;
+  color: rgba(255, 255, 255, 0.5);
   -webkit-transition: all 0.25s ease;
   transition: all 0.25s ease;
   -webkit-backface-visibility: hidden;
@@ -154,7 +112,7 @@ label.highlight {
 input, textarea {
   font-size: 22px;
   display: block;
-  /*width: 100%;*/
+  width: 100%;
   height: 100%;
   padding: 5px 10px;
   background: none;
@@ -219,8 +177,4 @@ textarea {
 .forgot {
   margin-top: -20px;
   text-align: right;
-}
-
-.radioButtonStyle {
-    width: 0;
 }
