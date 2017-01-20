@@ -29,46 +29,93 @@ public partial class _Default : System.Web.UI.Page
             QRStatus.Text = "Job Completed!";
         }
 
+        
         //Equipment button invible when submitted
-        SqlConnection checkEqp = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-        using (checkEqp)
+        try
         {
-            checkEqp.Open();
-            SqlCommand checkEqpcmd = new SqlCommand("SELECT Equipment.EAvailability FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Jobs ON JobItems.JItemjobID = Jobs.JobID WHERE Jobs.JobID = @jobID", checkEqp);
-            checkEqpcmd.Parameters.AddWithValue("@jobID", Session["jobID"]);
-            Session["equipReturn"] = checkEqpcmd.ExecuteScalar().ToString();
-            checkEqp.Close();
+            SqlConnection checkEqp = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            using (checkEqp)
+            {
+                checkEqp.Open();
+                SqlCommand checkEqpcmd = new SqlCommand("SELECT Equipment.EAvailability FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Jobs ON JobItems.JItemjobID = Jobs.JobID WHERE Jobs.JobID = @jobID", checkEqp);
+                checkEqpcmd.Parameters.AddWithValue("@jobID", Session["jobID"]);
+                Session["equipReturn"] = checkEqpcmd.ExecuteScalar().ToString();
+                checkEqp.Close();
+            }
+            if ((string)Session["equipReturn"] == "yes")
+            {
+                equipmentCompleteLabel.Text = "equipment submitted";
+            }
+            else if ((string)Session["equipReturn"] == "no")
+            {
+                equipmentCompleteLabel.Visible = false;
+            }
         }
-        if ((string)Session["equipReturn"] == "yes")
+        catch
         {
-            equipmentCompleteLabel.Text = "equipment submitted";
-        }
-        else if ((string)Session["equipReturn"] == "no")
-        {
-            equipmentCompleteLabel.Visible = false;
+            ClientScript.RegisterStartupScript(GetType(), "noequip", "alert('The equipment has been returned!');", true);
         }
 
+        //Checking Maintenace if got fields or not. If not, means show the thing. If have, means hide the thing.
+        try
+        {
+            SqlConnection checkMaint = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            using (checkMaint)
+            {
+                checkMaint.Open();
+                SqlCommand checkMaintCmd = new SqlCommand("SELECT COUNT(JItemjobID) FROM JobItems WHERE JItemjobID = @jobID", checkMaint);
+                checkMaintCmd.Parameters.AddWithValue("@jobID", Session["jobID"]);
+                Session["MainCount"] = checkMaintCmd.ExecuteScalar().ToString();
+                checkMaint.Close();
+                //ClientScript.RegisterStartupScript(GetType(), "countMaint", "alert('Number of equipment --> "+(string)Session["MainCount"]+"');", true);
+            }
+        }
+        catch
+        {
+            ClientScript.RegisterStartupScript(GetType(), "nomaint", "alert('Somehow crash');", true);
+        }
+        
+        try
+        {
+            if (!IsPostBack)
+            {
+                //First Time
+                dropDownMaintenance.DataBind();
+                int i = dropDownMaintenance.Items.Count;
+                Session["intmary"] = i; //2
+                if (i == 0) //No equipments for this job
+                {
+                    ClientScript.RegisterStartupScript(GetType(), "nonononon", "alert('This job does not have any equipment to maintain.');", true);
+                }
+            }
+            else if (IsPostBack)
+            {
+                int f = (int)Session["intmary"];
+                int finalint = f - 1; //1
+                Session["intmary"] = finalint;
+                try
+                {
+                    dropDownMaintenance.SelectedIndex = finalint;
+                }
+                catch
+                {
+                    ClientScript.RegisterStartupScript(GetType(), "selectSelfMain", "alert('Please select a part to replace.');", true);
+                    return;
+                }
+                dropDownMaintenance.SelectedIndex = finalint;
 
-        if (!IsPostBack)
-        {
-            //First Time
-            dropDownMaintenance.DataBind();
-            int i = dropDownMaintenance.Items.Count;
-            Session["intmary"] = i; //2
-           // ClientScript.RegisterStartupScript(GetType(), "count", "alert('" + (int)Session["intmary"] + "');", true);
+            }
+            if ((int)Session["intmary"] == 0)
+            {
+                maintainForm.Visible = false;
+            }
         }
-        else if(IsPostBack)
+        catch
         {
-            int f = (int)Session["intmary"];
-            int finalint = f - 1; //1
-            Session["intmary"] = finalint;
-            dropDownMaintenance.SelectedIndex = finalint;
-            //ClientScript.RegisterStartupScript(GetType(), "count", "alert('wobololo " + (int)Session["intmary"] + "');", true);
+            ClientScript.RegisterStartupScript(GetType(), "selectSelfMain", "alert('Crash2.');", true);
         }
-        if ((int)Session["intmary"] == 0)
-        {
-            maintainForm.Visible = false;
-        }
+        /*
+        */
     }
 
     protected void dropDownMaintenance_DataBound(object sender, EventArgs e)
@@ -76,7 +123,14 @@ public partial class _Default : System.Web.UI.Page
         
     }
 
-    protected void SubmitMaint_Click(object sender, EventArgs e)
+    protected void GridView1_DataBound(object sender, EventArgs e)
+    {
+        //try { string testEmpty = GridView1.Rows[0].Cells[0].Text.ToString(); if (testEmpty != "") { ClientScript.RegisterStartupScript(GetType(), "yay", "alert('its empty');", true); } }
+        //catch { ClientScript.RegisterStartupScript(GetType(), "nay", "alert('not empty');", true); }
+    }
+
+
+    protected void valSubMaint_Click(object sender, EventArgs e)
     {
         SqlConnection updateMaintenance = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
@@ -86,6 +140,7 @@ public partial class _Default : System.Web.UI.Page
         //No Maintenance
         if (noMaintenance.Checked == true)
         {
+            //ClientScript.RegisterStartupScript(GetType(), "SelfSelectTrue0", "alert('YOU SELECTED NO');", true);
             using (updateMaintenance)
             {
                 updateMaintenance.Open();
@@ -102,8 +157,9 @@ public partial class _Default : System.Web.UI.Page
         //Self Maintenance
         if (selfMaintenance.Checked == true)
         {
+           // ClientScript.RegisterStartupScript(GetType(), "SelfSelectTrue1", "alert('YOU SELECTED SELF');", true);
             if (selfDesc.Text != "" && selfType.SelectedValue.ToString() != "selectTypeError")
-            { 
+            {
                 string selfTypePost = selfType.SelectedValue.ToString();
                 string selfQtyPost = selfQty.SelectedValue.ToString();
                 string selfTextPost = selfDesc.Text.ToString();
@@ -146,6 +202,7 @@ public partial class _Default : System.Web.UI.Page
         //Outsource Maintenance
         if (outsourceMaintenance.Checked == true)
         {
+            //ClientScript.RegisterStartupScript(GetType(), "SelfSelectTrue2", "alert('YOU SELECTED OUT');", true);
             string OSTxt = outsourceText.Text.ToString();
             if (OSTxt != "")
             {
@@ -170,10 +227,9 @@ public partial class _Default : System.Web.UI.Page
 
     }
 
-    protected void GridView1_DataBound(object sender, EventArgs e)
+    protected void noMaintenance_CheckedChanged1(object sender, EventArgs e)
     {
-        //try { string testEmpty = GridView1.Rows[0].Cells[0].Text.ToString(); if (testEmpty != "") { ClientScript.RegisterStartupScript(GetType(), "yay", "alert('its empty');", true); } }
-        //catch { ClientScript.RegisterStartupScript(GetType(), "nay", "alert('not empty');", true); }
+        ClientScript.RegisterStartupScript(GetType(), "FRAN", "alert('Fran pls work'); ", true);
+        maintainCompletedLabel.Text = "awretyuiyyytrs";
     }
-
 }

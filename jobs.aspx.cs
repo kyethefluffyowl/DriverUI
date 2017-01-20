@@ -28,7 +28,7 @@ public partial class _Default : System.Web.UI.Page
 
         string jobID = jobGridView.SelectedRow.Cells[1].Text;               Session["jobID"] = jobID.ToString();
         string custID = jobGridView.SelectedRow.Cells[2].Text;              Session["custID"] = custID.ToString();
-        //string driverID = jobGridView.SelectedRow.Cells[3].Text;            Session["driverID"] = driverID.ToString();
+        string driverID = jobGridView.SelectedRow.Cells[3].Text;            Session["driverID"] = driverID.ToString();
         string location = jobGridView.SelectedRow.Cells[4].Text;            Session["locationCol"] = location.ToString();
         string task = jobGridView.SelectedRow.Cells[5].Text;                Session["taskCol"] = task.ToString();
         string jobDesc = jobGridView.SelectedRow.Cells[6].Text;             Session["jobDescCol"] = jobDesc.ToString();

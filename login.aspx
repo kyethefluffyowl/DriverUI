@@ -56,7 +56,7 @@
                 </div>
                 
                   <div class="">
-                        <asp:TextBox ID="loginEmail" runat="server" TextMode="Email" placeholder="Email Address*" AutoCompleteType="Email" CssClass="textboxLoginDriver"></asp:TextBox>
+                        <asp:TextBox ID="loginEmail" runat="server" placeholder="Email Address*" AutoCompleteType="Email" CssClass="textboxLoginDriver" TextMode="Email"></asp:TextBox>
                         <p><asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="loginEmail" ErrorMessage="Please Enter Valid Email Address" ForeColor="Red"></asp:RequiredFieldValidator>  </p> 
                     </div>
 

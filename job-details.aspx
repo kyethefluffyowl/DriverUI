@@ -97,7 +97,7 @@
                     </div>
                     <div id="Maintenance" class="tabcontent">
                       <h3>Maintenance</h3>
-
+                        
                         <asp:label runat="server" ID="maintainCompletedLabel" Text="You have successfully submitted the report." BackColor="White"></asp:label>
                         <form runat="server" id="maintainForm" style="">
                             <!-- Linking the dropdownlist to the database and grabbing out what relates to the job -->
@@ -107,12 +107,16 @@
                             </SelectParameters>
                         </asp:SqlDataSource>
                         <asp:DropDownList Enabled="false" runat="server" ID="dropDownMaintenance" DataSourceID="dropDownMaintenanceSQL" DataTextField="EName" DataValueField="EquipID" OnDataBound="dropDownMaintenance_DataBound"></asp:DropDownList>
+                            
 
-                           <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="noMaintainClick();"><asp:RadioButton runat="server"  Checked="true" style="width:auto; display:none;" id="noMaintenance" onclick="checkbox0()"/> 
+                           <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="checkbox0();" id="noMaintenanceButton">
+                               <!--NO MAINTENANCE-->
+                               <div style="display:none;"><asp:RadioButton runat="server" ID="noMaintenance" GroupName="maintainGrp" Checked="true"/></div>
                                 <div style="display:inline-block"><asp:Label ForeColor="white" runat="server">No Maintenance</asp:Label></div></div>
                            <div>
-                               <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="selfMaintainClick();">
-                                   <asp:RadioButton runat="server" style="width:auto; display:none;" id="selfMaintenance" onclick="checkbox1()"/>
+                               <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="checkbox1();" id="selfMaintenanceButton">
+                                   <!--SELF MAINTENANCE-->
+                                   <div style="display:none;"><asp:RadioButton runat="server" ID="selfMaintenance" GroupName="maintainGrp"/></div>
                                    <div style="display:inline-block">
                                        <asp:Label ForeColor="white" runat="server">Self Maintenance</asp:Label>
                                    </div>
@@ -137,15 +141,18 @@
                                </div>
                            </div>
                            <div>
-                               <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="outsourceMaintainClick();">
-                                    <asp:RadioButton runat="server" id="outsourceMaintenance" onclick="checkbox2()" style="width:auto; display:none;" />
+                               <div class="button" style="background-color:#008b8b; font-variant:normal;" onclick="checkbox2();" id="osMaintenanceButton">
+                                   <!--OS MAINTENANCE-->
+                                    <div style="display:none;"><asp:RadioButton runat="server" ID="outsourceMaintenance" GroupName="maintainGrp"/></div>
                                     <div style="display:inline-block">
                                         <asp:Label ForeColor="white" runat="server">Outsource Maintenance</asp:Label>
                                     </div>
                                </div>
                                <asp:TextBox runat="server" ID="outsourceText" Width="100%" Height="3em" ForeColor="DarkCyan"></asp:TextBox>
                            </div>
-                            <div style="float:right; font-size:0.5em; background-color:#008b8b; margin:1.2em 0; "><asp:Button runat="server" PostBackUrl="~/job-details.aspx" Text="Submit" OnClick="SubmitMaint_Click"/></div>
+                            <div style="float:right; font-size:0.5em; background-color:#008b8b; margin:1.2em 0; ">
+                                <asp:Button runat="server" Text="Submit" ID="valSubMaint" OnClick="valSubMaint_Click"/>
+                            </div>
                         </form>
                     </div>
                     <div id="Status" class="tabcontent">
@@ -175,23 +182,29 @@
             outsource = document.getElementById("outsourceMaintenance");
             outsourceText = document.getElementById("outsourceText");
 
-            function checkbox0() {
-                    self.checked = false;
-                    outsource.checked = false;
-                    outsourceText.style.display = "none";
-                    selfDetailsDIV.style.display = "none";
+            function checkbox0() { //No Maintenance
+                document.getElementById('noMaintenance').checked = true;
+                document.getElementById('noMaintenanceButton').style.backgroundColor = "#005555 ";
+                document.getElementById('selfMaintenanceButton').style.backgroundColor = "#008b8b ";
+                document.getElementById('osMaintenanceButton').style.backgroundColor = "#008b8b ";
+                outsourceText.style.display = "none";
+                selfDetailsDIV.style.display = "none";
             }
-            function checkbox1() {
-                    noMaintenance.checked = false;
-                    outsource.checked = false;
-                    outsourceText.style.display = "none";
-                    selfDetailsDIV.style.display = "initial";
+            function checkbox1() {//Self Maintenance
+                document.getElementById('selfMaintenance').checked = true;
+                document.getElementById('noMaintenanceButton').style.backgroundColor = "#008b8b ";
+                document.getElementById('selfMaintenanceButton').style.backgroundColor = "#005555 ";
+                document.getElementById('osMaintenanceButton').style.backgroundColor = "#008b8b ";
+                outsourceText.style.display = "none";
+                selfDetailsDIV.style.display = "block";
             }
-            function checkbox2() {
-                    noMaintenance.checked = false;
-                    self.checked = false;
-                    outsourceText.style.display = "block";
-                    selfDetailsDIV.style.display = "none";
+            function checkbox2() {//OS Maintenance
+                document.getElementById('outsourceMaintenance').checked = true;
+                document.getElementById('noMaintenanceButton').style.backgroundColor = "#008b8b ";
+                document.getElementById('selfMaintenanceButton').style.backgroundColor = "#008b8b ";
+                document.getElementById('osMaintenanceButton').style.backgroundColor = "#005555 ";
+                outsourceText.style.display = "block";
+                selfDetailsDIV.style.display = "none";
             }
 
             var lastOpenedTab = $.session.set("NameofSession", "");
@@ -212,18 +225,6 @@
                 lastOpenedTab = tabName;
                 $.session.set("NameofSession", lastOpenedTab + "Tab");
                 
-            }
-
-            function noMaintainClick()
-            {
-                document.getElementById("noMaintenance").click();
-                
-            }
-            function selfMaintainClick() {
-                document.getElementById("selfMaintenance").click();
-            }
-            function outsourceMaintainClick() {
-                document.getElementById("outsourceMaintenance").click();
             }
 
             function resumeTab() {

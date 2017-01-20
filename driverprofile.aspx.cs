@@ -22,7 +22,7 @@ public partial class driverprofile : System.Web.UI.Page
             newpw3.Open();
             SqlCommand cmd10 = new SqlCommand("SELECT DPassword FROM Drivers Update Drivers SET DPassword = @DriverPassword WHERE DriverID =@DriverID", newpw3);
             cmd10.Parameters.AddWithValue("@DriverPassword", tbpw.Text);
-            cmd10.Parameters.AddWithValue("@DriverID", (string)Session["JDriverID"]);
+            cmd10.Parameters.AddWithValue("@DriverID", (string)Session["driverID"]);
             cmd10.ExecuteNonQuery();
 
             ClientScript.RegisterStartupScript(GetType(), "pw", "alert('Password Update Successful'); ", true);

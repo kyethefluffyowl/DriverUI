@@ -83,6 +83,17 @@ function CreateDivElement() {
     <div id="maindiv">
 
     </div>
+
+    <div style="border: 3px solid black">
+        <form runat="server">
+            <asp:RadioButton runat="server" ID="noMain" GroupName="maintainGrp" Checked="true"/>
+            <asp:RadioButton runat="server" ID="selfMain" GroupName="maintainGrp"/>
+            <asp:RadioButton runat="server" ID="OSMain" GroupName="maintainGrp"/>
+
+            <asp:Button runat="server" ID="submitButton" OnClick="submitButton_Click" />
+        </form>
+    </div>
+
 </body>
 
 </html>

@@ -12,5 +12,19 @@ public partial class testingPage : System.Web.UI.Page
     {
        
     }
-
+    protected void submitButton_Click(object sender, EventArgs e)
+    {
+        if (noMain.Checked == true)
+        {
+            ClientScript.RegisterStartupScript(GetType(), "nomainclick", "alert('You clicked no main');", true);
+        }
+        if (selfMain.Checked == true)
+        {
+            ClientScript.RegisterStartupScript(GetType(), "nomainclick", "alert('You clicked self main');", true);
+        }
+        if (OSMain.Checked == true)
+        {
+            ClientScript.RegisterStartupScript(GetType(), "nomainclick", "alert('You clicked os main');", true);
+        }
+    }
 }
