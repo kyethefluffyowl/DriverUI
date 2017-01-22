@@ -42,7 +42,13 @@
 
 <body style="background-color:#fff;">
     <form runat="server">
+        <asp:DropDownList runat="server" ID="jobVehicles" DataSourceID="jobVehiclesSQL" DataTextField="EName" DataValueField="EquipID"></asp:DropDownList>
         <asp:Button runat="server" text="Release Vehicle" ID="releaseVehicleButton" OnClick="releaseVehicleButton_Click" CssClass="equipmentReturn"/>
     </form>
+    <asp:SqlDataSource runat="server" ID="jobVehiclesSQL" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID WHERE (JobItems.JItemjobID = @jobID)">
+        <SelectParameters>
+            <asp:SessionParameter Name="jobID" SessionField="jobID" />
+        </SelectParameters>
+    </asp:SqlDataSource>
 </body>
 </html>

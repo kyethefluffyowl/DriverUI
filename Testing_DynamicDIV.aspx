@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="testingPage.aspx.cs" Inherits="testingPage" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Testing_DynamicDIV.aspx.cs" Inherits="testingPage" %>
 
 <!DOCTYPE html>
 
@@ -85,13 +85,8 @@ function CreateDivElement() {
     </div>
 
     <div style="border: 3px solid black">
-        <form runat="server">
-            <asp:RadioButton runat="server" ID="noMain" GroupName="maintainGrp" Checked="true"/>
-            <asp:RadioButton runat="server" ID="selfMain" GroupName="maintainGrp"/>
-            <asp:RadioButton runat="server" ID="OSMain" GroupName="maintainGrp"/>
-
-            <asp:Button runat="server" ID="submitButton" OnClick="submitButton_Click" />
-        </form>
+        <asp:Label runat="server" ID="numberLabel"></asp:Label>
+        <asp:Button runat="server" ID="testclick" OnClick="testclick_Click"/>
     </div>
 
 </body>

@@ -19,8 +19,9 @@ public partial class _Default : System.Web.UI.Page
         using (releaseVehicle)
         {
             releaseVehicle.Open();
-            SqlCommand cmdRelease = new SqlCommand("UPDATE Equipment SET Equipment.EAvailability = 'yes' FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID WHERE JobItems.JItemjobID = @jobID", releaseVehicle);
+            SqlCommand cmdRelease = new SqlCommand("UPDATE Equipment SET Equipment.EAvailability = 'yes' FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID WHERE JobItems.JItemjobID = @jobID AND Equipment.EquipID = @equipid", releaseVehicle);
             cmdRelease.Parameters.AddWithValue("@jobID", Session["jobID"]);
+            cmdRelease.Parameters.AddWithValue("@equipid", jobVehicles.SelectedValue);
             cmdRelease.ExecuteNonQuery();
 
             releaseVehicle.Close();

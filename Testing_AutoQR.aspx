@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AutoQR_Testing.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Testing_AutoQR.aspx.cs" Inherits="_Default" %>
 
 <!DOCTYPE html>
 

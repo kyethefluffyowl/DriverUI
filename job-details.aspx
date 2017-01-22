@@ -98,7 +98,7 @@
                     <div id="Maintenance" class="tabcontent">
                       <h3>Maintenance</h3>
                         
-                        <asp:label runat="server" ID="maintainCompletedLabel" Text="You have successfully submitted the report." BackColor="White"></asp:label>
+                        <asp:label runat="server" ID="maintainCompletedLabel" Text="You have successfully submitted the report." BackColor="White" Visible="false"></asp:label>
                         <form runat="server" id="maintainForm" style="">
                             <!-- Linking the dropdownlist to the database and grabbing out what relates to the job -->
                             <asp:SqlDataSource ID="dropDownMaintenanceSQL" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT EquipID, EName FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID WHERE (JobItems.JItemjobID = @jobID)" >
@@ -123,11 +123,9 @@
                                </div>
                                <div id="selfDetailsDIV" style="display:inline-block; margin-bottom:1em;">
                                    <div style="display:block;">
-                                       <div style="display:inline-block; font-size:1.2em; padding:0.3em;"><asp:DropDownList ID="selfType" runat="server">
-                                           <asp:ListItem Selected="True" Value="selectTypeError">Select the item needed for maintenance.</asp:ListItem>
-                                           <asp:ListItem Value="1">Industrial Engine</asp:ListItem>
-                                           <asp:ListItem Value="7">Industrial Wire</asp:ListItem>
-                                       </asp:DropDownList></div>
+                                       <div style="display:inline-block; font-size:1.2em; padding:0.3em;">
+                                           <asp:DropDownList runat="server" ID="selfType" DataSourceID="inventoryDatasource" DataTextField="IName" DataValueField="InventoryID"></asp:DropDownList>
+                                       </div>
                                        <div style="display:inline-block; font-size:1.2em; padding:0.3em;"><asp:DropDownList ID="selfQty" runat="server">
                                            <asp:ListItem Selected="True" Value="1" >1</asp:ListItem>
                                            <asp:ListItem Value="2" >2</asp:ListItem>
@@ -137,7 +135,10 @@
                                            <asp:ListItem Value="6" >6</asp:ListItem>
                                        </asp:DropDownList></div>
                                    </div>
-                                   <div style="display:block; width:100%; margin-bottom:1em;"><asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em" ForeColor="DarkCyan"></asp:TextBox></div>
+                                   <div style="display:block; width:100%; margin-bottom:1em;">
+                                       <asp:TextBox runat="server" ID="selfDesc" Width="100%" Height="3em" ForeColor="DarkCyan" CausesValidation="true"></asp:TextBox>
+                                       <asp:RequiredFieldValidator ID="selfDescValidator" ClientIDMode="Static" runat="server" ControlToValidate="selfDesc" ErrorMessage="Please state the issue." Enabled="false"></asp:RequiredFieldValidator>
+                                   </div>
                                </div>
                            </div>
                            <div>
@@ -149,6 +150,7 @@
                                     </div>
                                </div>
                                <asp:TextBox runat="server" ID="outsourceText" Width="100%" Height="3em" ForeColor="DarkCyan"></asp:TextBox>
+                               <asp:RequiredFieldValidator ID="OSValidator" ClientIDMode="Static" runat="server" ControlToValidate="outsourceText" ErrorMessage="Please describe the issue in as much detail as you can." Enabled="false"></asp:RequiredFieldValidator>
                            </div>
                             <div style="float:right; font-size:0.5em; background-color:#008b8b; margin:1.2em 0; ">
                                 <asp:Button runat="server" Text="Submit" ID="valSubMaint" OnClick="valSubMaint_Click"/>
@@ -162,14 +164,23 @@
                     <div id="EqReturn" class="tabcontent">
                       <h3>Equipment Return</h3>
                       <p>Click the button to release the vehicle back into inventory.</p>
-                        <iframe id="iframeEquipment" src="equipment-return.aspx" frameborder="0" style="width:100%; height:5em; overflow:hidden;"></iframe>
-                        <asp:Label runat="server" ID="equipmentCompleteLabel" BackColor="White" Text="no"></asp:Label>
+                        <iframe id="iframeEquipment" src="equipment-return.aspx" frameborder="0" style="width:100%; height:5em; overflow:hidden; display:block;"></iframe>
+                        <div style="display:block;">
+                            <asp:Label runat="server" ID="equipmentCompleteLabel" ForeColor="Black" Text=""></asp:Label>
+                        </div>
+                        
                     </div>
                 </div>
         </div>
         </div>
         </div>
-        </div>
+        </div>  
+        <asp:SqlDataSource ID="inventoryDatasource" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT [InventoryID], [IName] FROM [Inventory]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="test" runat="server" ConnectionString="<%$ ConnectionStrings:fypdbConnectionStringJOBS %>" SelectCommand="SELECT Equipment.EAvailability FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Jobs ON JobItems.JItemjobID = Jobs.JobID WHERE Jobs.JobID = @jobID">
+            <SelectParameters>
+                <asp:SessionParameter Name="jobID" SessionField="jobID" />
+            </SelectParameters>
+        </asp:SqlDataSource>
         <!-- /#page-content-wrapper -->
 
         <script>
@@ -189,6 +200,8 @@
                 document.getElementById('osMaintenanceButton').style.backgroundColor = "#008b8b ";
                 outsourceText.style.display = "none";
                 selfDetailsDIV.style.display = "none";
+                ValidatorEnable(document.getElementById('<%= selfDescValidator.ClientID %>'), false);
+                ValidatorEnable(document.getElementById('<%= OSValidator.ClientID %>'), false);
             }
             function checkbox1() {//Self Maintenance
                 document.getElementById('selfMaintenance').checked = true;
@@ -197,6 +210,9 @@
                 document.getElementById('osMaintenanceButton').style.backgroundColor = "#008b8b ";
                 outsourceText.style.display = "none";
                 selfDetailsDIV.style.display = "block";
+                ValidatorEnable(document.getElementById('<%= selfDescValidator.ClientID %>'), true);
+                ValidatorEnable(document.getElementById('<%= OSValidator.ClientID %>'), false);
+                
             }
             function checkbox2() {//OS Maintenance
                 document.getElementById('outsourceMaintenance').checked = true;
@@ -205,6 +221,8 @@
                 document.getElementById('osMaintenanceButton').style.backgroundColor = "#005555 ";
                 outsourceText.style.display = "block";
                 selfDetailsDIV.style.display = "none";
+                ValidatorEnable(document.getElementById('<%= selfDescValidator.ClientID %>'), false); 
+                ValidatorEnable(document.getElementById('<%= OSValidator.ClientID %>'), true);
             }
 
             var lastOpenedTab = $.session.set("NameofSession", "");

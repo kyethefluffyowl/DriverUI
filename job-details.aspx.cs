@@ -20,8 +20,7 @@ public partial class _Default : System.Web.UI.Page
         LocationPara.Text = (string)Session["locationCol"];
         ETCPara.Text = (string)Session["driverDateEndCol"];
         StatusPara.Text = (string)Session["statusCol"];
-        equipmentCompleteLabel.Text = (string)Session["equipReturn"];
-
+        
         //Marking Status as complete
         if ((string)Session["statusCol"] == "Completed")
         {
@@ -30,7 +29,7 @@ public partial class _Default : System.Web.UI.Page
         }
 
         
-        //Equipment button invible when submitted
+        //Equipment button invisble when submitted
         try
         {
             SqlConnection checkEqp = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
@@ -39,16 +38,8 @@ public partial class _Default : System.Web.UI.Page
                 checkEqp.Open();
                 SqlCommand checkEqpcmd = new SqlCommand("SELECT Equipment.EAvailability FROM Equipment INNER JOIN JobItems ON Equipment.EquipID = JobItems.JItemEquipID INNER JOIN Jobs ON JobItems.JItemjobID = Jobs.JobID WHERE Jobs.JobID = @jobID", checkEqp);
                 checkEqpcmd.Parameters.AddWithValue("@jobID", Session["jobID"]);
-                Session["equipReturn"] = checkEqpcmd.ExecuteScalar().ToString();
+                equipmentCompleteLabel.Text = checkEqpcmd.ExecuteScalar().ToString();
                 checkEqp.Close();
-            }
-            if ((string)Session["equipReturn"] == "yes")
-            {
-                equipmentCompleteLabel.Text = "equipment submitted";
-            }
-            else if ((string)Session["equipReturn"] == "no")
-            {
-                equipmentCompleteLabel.Visible = false;
             }
         }
         catch
@@ -72,7 +63,7 @@ public partial class _Default : System.Web.UI.Page
         }
         catch
         {
-            ClientScript.RegisterStartupScript(GetType(), "nomaint", "alert('Somehow crash');", true);
+            ClientScript.RegisterStartupScript(GetType(), "nomaint", "alert('Error code: JD1');", true);
         }
         
         try
@@ -83,52 +74,73 @@ public partial class _Default : System.Web.UI.Page
                 dropDownMaintenance.DataBind();
                 int i = dropDownMaintenance.Items.Count;
                 Session["intmary"] = i; //2
+                //ClientScript.RegisterStartupScript(GetType(), "sdfdfdfd", "alert('FIRST TIME -->"+(int)Session["intmary"]+"');", true);
                 if (i == 0) //No equipments for this job
                 {
                     ClientScript.RegisterStartupScript(GetType(), "nonononon", "alert('This job does not have any equipment to maintain.');", true);
                 }
             }
-            else if (IsPostBack)
+            if (IsPostBack)
             {
-                int f = (int)Session["intmary"];
-                int finalint = f - 1; //1
-                Session["intmary"] = finalint;
-                try
+                if ((string)Session["maintFail"] == "fail") //if it fails (missing data)
                 {
+                    dropDownMaintenance.DataBind();
+                    int i = dropDownMaintenance.Items.Count;
+                    Session["intmary"] = i;
+
+                }
+                if ((string)Session["maintFail"] != "fail") //if it passed (filled up)
+                {
+                    int f = (int)Session["intmary"];
+                    int finalint = f - 1; //1
+                    Session["intmary"] = finalint;
                     dropDownMaintenance.SelectedIndex = finalint;
                 }
-                catch
-                {
-                    ClientScript.RegisterStartupScript(GetType(), "selectSelfMain", "alert('Please select a part to replace.');", true);
-                    return;
-                }
-                dropDownMaintenance.SelectedIndex = finalint;
-
+                
             }
-            if ((int)Session["intmary"] == 0)
+            if ((int)Session["intmary"] == 0) //Submitted maintainence record;
             {
                 maintainForm.Visible = false;
+                maintainCompletedLabel.Visible = true;
+
+                SqlConnection updateMaintStatus = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                using (updateMaintStatus)
+                {
+                    updateMaintStatus.Open();
+                    SqlCommand maintStatus = new SqlCommand("UPDATE Jobs SET JMaintain = @jMaintain WHERE JobID = @jobID", updateMaintStatus);
+                    maintStatus.Parameters.AddWithValue("@jMaintain", "yes");
+                    maintStatus.Parameters.AddWithValue("@jobID", Session["jobID"]);
+                    maintStatus.ExecuteNonQuery();
+                    updateMaintStatus.Close();
+                }
             }
         }
         catch
         {
-            ClientScript.RegisterStartupScript(GetType(), "selectSelfMain", "alert('Crash2.');", true);
+            ClientScript.RegisterStartupScript(GetType(), "selectSelfMain", "alert('Please contact the administrator and give this code --> (JD2).');", true);
         }
-        /*
-        */
-    }
+        SqlConnection checkMaintStatus = new SqlConnection("Server=tcp:hlgroup.database.windows.net;Initial Catalog=fypdb;Persist Security Info=False;User ID=hlgroup;Password=Daphnerocks1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+        using (checkMaintStatus)
+        {
+            checkMaintStatus.Open();
+            SqlCommand maintStatusCheck = new SqlCommand("SELECT JMaintain FROM Jobs WHERE JobID = @jobID", checkMaintStatus);
+            maintStatusCheck.Parameters.AddWithValue("@jobID", Session["jobID"]);
+            string maintStatus = maintStatusCheck.ExecuteScalar().ToString();
+            checkMaintStatus.Close();
+            if (maintStatus == "yes")
+            {
+                maintainForm.Visible = false;
+                maintainCompletedLabel.Visible = true;
+            }
+            if (maintStatus != "yes")
+            {
+                maintainForm.Visible = true;
+                maintainCompletedLabel.Visible = false;
 
-    protected void dropDownMaintenance_DataBound(object sender, EventArgs e)
-    {
-        
-    }
+            }
+        }
 
-    protected void GridView1_DataBound(object sender, EventArgs e)
-    {
-        //try { string testEmpty = GridView1.Rows[0].Cells[0].Text.ToString(); if (testEmpty != "") { ClientScript.RegisterStartupScript(GetType(), "yay", "alert('its empty');", true); } }
-        //catch { ClientScript.RegisterStartupScript(GetType(), "nay", "alert('not empty');", true); }
     }
-
 
     protected void valSubMaint_Click(object sender, EventArgs e)
     {
@@ -151,6 +163,7 @@ public partial class _Default : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@mRemarks", "N.A.");
 
                 int result = cmd.ExecuteNonQuery();
+                Session["maintFail"] = "pass";
                 updateMaintenance.Close();
             }
         }
@@ -189,7 +202,7 @@ public partial class _Default : System.Web.UI.Page
                     //Executing everything
                     int result3 = cmdInventoryQtyUpdate.ExecuteNonQuery();
                     int result4 = cmdNewEntry.ExecuteNonQuery();
-
+                    Session["maintFail"] = "pass";
                     updateMaintenance.Close();
                 }
             }
@@ -197,6 +210,7 @@ public partial class _Default : System.Web.UI.Page
             {
                 ClientScript.RegisterStartupScript(GetType(), "MissingFieldAlert", "alert('There are missing fields. Please try again.'); ", true);
                 ClientScript.RegisterStartupScript(GetType(), "MaintenanceTab", "document.getElementById('MaintenanceTab').click();", true);
+                Session["maintFail"] = "fail";
             }
         }
         //Outsource Maintenance
@@ -204,7 +218,7 @@ public partial class _Default : System.Web.UI.Page
         {
             //ClientScript.RegisterStartupScript(GetType(), "SelfSelectTrue2", "alert('YOU SELECTED OUT');", true);
             string OSTxt = outsourceText.Text.ToString();
-            if (OSTxt != "")
+            if (OSTxt != "") //If its not empty
             {
                 using (updateMaintenance)
                 {
@@ -219,17 +233,23 @@ public partial class _Default : System.Web.UI.Page
                     updateMaintenance.Close();
                 }
             }
-            else
+            else //if its empty
             {
                 ClientScript.RegisterStartupScript(GetType(), "MissingFieldAlert", "alert('Please state the issue for outsource repair.'); ", true);
+                Session["maintFail"] = "fail";
             }
         }
+    }
+
+
+    protected void dropDownMaintenance_DataBound(object sender, EventArgs e)
+    {
 
     }
 
-    protected void noMaintenance_CheckedChanged1(object sender, EventArgs e)
+    protected void GridView1_DataBound(object sender, EventArgs e)
     {
-        ClientScript.RegisterStartupScript(GetType(), "FRAN", "alert('Fran pls work'); ", true);
-        maintainCompletedLabel.Text = "awretyuiyyytrs";
+        //try { string testEmpty = GridView1.Rows[0].Cells[0].Text.ToString(); if (testEmpty != "") { ClientScript.RegisterStartupScript(GetType(), "yay", "alert('its empty');", true); } }
+        //catch { ClientScript.RegisterStartupScript(GetType(), "nay", "alert('not empty');", true); }
     }
 }
